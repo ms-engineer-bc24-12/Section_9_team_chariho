@@ -21,10 +21,10 @@ export default function RentalPage() {
           <p>🏠 ホーム</p>
           <p>👤 マイページ</p>
         </div>
-        <p className="text-center text-sm text-gray-500 py-2"></p>
       </div>
     </div>
   );
 }
 
+//ページ確認
 //http://localhost:3000/rental にアクセス

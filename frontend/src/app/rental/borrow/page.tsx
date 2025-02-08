@@ -7,9 +7,7 @@ export default function BorrowPage() {
         <p className="text-2xl font-bold">
           ヘッダーの右上にアカウント設定を追加
         </p>
-        <p className="text-2xl font-bold">
-          借りる ヘッダーの右上にアカウント設定を追加
-        </p>
+        <p className="text-2xl font-bold">借りる</p>
 
         <div className="mt-6 w-80 h-60 border flex items-center justify-center">
           <p>Googleマップ</p>
@@ -33,7 +31,6 @@ export default function BorrowPage() {
           <p>🏠 ホーム</p>
           <p>👤 マイページ</p>
         </div>
-        <p className="text-center text-sm text-gray-500 py-2"></p>
       </div>
     </div>
   );
