@@ -14,14 +14,6 @@ export default function RentalPage() {
           <p className="border p-4 rounded-md w-60 text-center">返す</p>
         </div>
       </div>
-
-      {/* フッターナビ */}
-      <div className="w-full">
-        <div className="flex justify-around bg-gray-100 p-4">
-          <p>🏠 ホーム</p>
-          <p>👤 マイページ</p>
-        </div>
-      </div>
     </div>
   );
 }
