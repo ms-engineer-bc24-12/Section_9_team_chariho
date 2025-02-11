@@ -7,6 +7,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import Button from '@/app/components/Button';
+import Link from 'next/link';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -64,9 +65,9 @@ export default function Login() {
       {/* 新規登録ページへのリンク */}
       <p className="mt-4 text-sm">
         アカウントをお持ちでない方は{' '}
-        <a href="/auth/register" className="text-blue-500 underline">
+        <Link href="/auth/register" className="text-blue-500 underline">
           新規登録
-        </a>
+        </Link>
       </p>
     </div>
   );
