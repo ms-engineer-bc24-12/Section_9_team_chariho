@@ -4,18 +4,22 @@
 
 'use client';
 import { useState, useEffect } from 'react';
+import EXIF from 'exif-js';
 
 export default function ReturnPage() {
-  // ユーザーの現在地（緯度・経度）
+  // ユーザーの現在地
   const [userLocation, setUserLocation] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
-  // エラーメッセージ
   const [error, setError] = useState<string | null>(null);
+
   // 画像アップロード用の state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewURL, setPreviewURL] = useState<string | null>(null);
+  const [gpsData, setGpsData] = useState<{ lat: number; lng: number } | null>(
+    null,
+  );
 
   // 位置情報を取得する処理
   useEffect(() => {
@@ -42,8 +46,46 @@ export default function ReturnPage() {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       setSelectedFile(file);
-      setPreviewURL(URL.createObjectURL(file)); // プレビュー用URLを作成
+      setPreviewURL(URL.createObjectURL(file));
+
+      // Exif情報の読み込み
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        if (e.target && e.target.result instanceof ArrayBuffer) {
+          const exifData = EXIF.readFromBinaryFile(e.target.result);
+
+          //ここに追加！Exifデータをコンソールで確認
+          console.log('Exif情報:', exifData);
+
+          if (exifData.GPSLatitude && exifData.GPSLongitude) {
+            const lat = convertDMSToDD(
+              exifData.GPSLatitude,
+              exifData.GPSLatitudeRef,
+            );
+            const lng = convertDMSToDD(
+              exifData.GPSLongitude,
+              exifData.GPSLongitudeRef,
+            );
+            setGpsData({ lat, lng });
+          } else {
+            setGpsData(null);
+          }
+        }
+      };
+      reader.readAsArrayBuffer(file);
     }
+  };
+
+  // DMS（度・分・秒）を10進数（DD）に変換する関数
+  const convertDMSToDD = (dms: number[], ref: string) => {
+    const degrees = dms[0];
+    const minutes = dms[1] / 60;
+    const seconds = dms[2] / 3600;
+    let dd = degrees + minutes + seconds;
+    if (ref === 'S' || ref === 'W') {
+      dd = -dd;
+    }
+    return dd;
   };
 
   return (
@@ -88,6 +130,7 @@ export default function ReturnPage() {
             onChange={handleFileChange}
             className="mt-2 border p-2 rounded-md"
           />
+
           {/* 画像プレビュー */}
           {previewURL && (
             <img
@@ -95,6 +138,15 @@ export default function ReturnPage() {
               alt="アップロード画像"
               className="mt-4 w-60 h-auto rounded-md border"
             />
+          )}
+
+          {/* 取得したGPS情報を表示 */}
+          {gpsData ? (
+            <p className="mt-4 text-green-600">
+              📍 画像のGPS情報: 緯度 {gpsData.lat}, 経度 {gpsData.lng}
+            </p>
+          ) : (
+            <p className="mt-4 text-red-500">⚠️ 画像にGPS情報がありません</p>
           )}
         </div>
 
