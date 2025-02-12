@@ -4,6 +4,22 @@ from app import crud, models, db
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 import os
+import stripe # NOTE: Stripeのライブラリをインポート
+import time
+
+stripe.api_key = 'sk_test_51Qpl1SJzpJ9UCOiVkKPGfNqfPkzMQsHYN8x2XKFpAvk4gpj2DyMo6shH6fD7LuKdKYW4ynl2eyPbGAMZzKOHh4Fb00yeVnWvpv'
+
+# Usage Recordを送信
+def create_usage_record(subscription_item_id, hours):
+    stripe.usage_records.create(
+        subscription_item=subscription_item_id,  # 顧客のサブスクリプションアイテムID
+        quantity=hours,  # 使用時間（1時間の場合は1）
+        timestamp=int(time.time()),  # 現在のUNIXタイムスタンプ
+        action="increment"  # 使用量を増加させる
+    )
+
+
+
 
 app = FastAPI()
 
