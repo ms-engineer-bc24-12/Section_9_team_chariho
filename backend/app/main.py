@@ -91,5 +91,5 @@ print(subscription)
 # 予約時にタスクを呼び出してUsage Recordを定期的に更新
 @app.post("/start-usage/")
 def start_usage(subscription_item_id: str):
-update_usage.apply_async((subscription_item_id,), countdown=3600)  # 1時間後にタスクを実行
-return {"message": "Usage started and task scheduled"}
+    update_usage.apply_async((subscription_item_id,), countdown=3600)
+    return {"message": "Usage started and task scheduled"}
