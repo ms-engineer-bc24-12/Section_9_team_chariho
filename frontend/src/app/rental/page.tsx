@@ -1,5 +1,7 @@
 //src/app/rental/page.tsx
 //②　借りる/貸す/返す選択ページ
+import Link from 'next/link';
+
 export default function RentalPage() {
   return (
     <div className="flex flex-col items-center justify-between min-h-screen">
@@ -9,17 +11,21 @@ export default function RentalPage() {
         </p>
 
         <div className="flex flex-col gap-4 mt-6">
-          <p className="border p-4 rounded-md w-60 text-center">貸す</p>
-          <p className="border p-4 rounded-md w-60 text-center">借りる</p>
-          <p className="border p-4 rounded-md w-60 text-center">返す</p>
-        </div>
-      </div>
-
-      {/* フッターナビ */}
-      <div className="w-full">
-        <div className="flex justify-around bg-gray-100 p-4">
-          <p>🏠 ホーム</p>
-          <p>👤 マイページ</p>
+          <Link href="/rental/lend">
+            <p className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
+              貸す
+            </p>
+          </Link>
+          <Link href="/rental/borrow">
+            <p className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
+              借りる
+            </p>
+          </Link>
+          <Link href="/rental/return">
+            <p className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
+              返す
+            </p>
+          </Link>
         </div>
       </div>
     </div>

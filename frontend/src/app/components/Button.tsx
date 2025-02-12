@@ -7,11 +7,18 @@ type ButtonProps = {
   children: ReactNode;
   onClick?: () => void;
   className?: string;
+  type?: 'button' | 'submit' | 'reset'; // type を追加
 };
 
-export default function Button({ children, onClick, className }: ButtonProps) {
+export default function Button({
+  children,
+  onClick,
+  className,
+  type = 'button',
+}: ButtonProps) {
   return (
     <button
+      type={type}
       onClick={onClick}
       className={`px-6 py-2 rounded-md transition ${className}`}
     >

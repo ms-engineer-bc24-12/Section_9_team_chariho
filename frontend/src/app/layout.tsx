@@ -12,7 +12,7 @@ type LayoutProps = {
 export default function Layout({ children }: LayoutProps) {
   return (
     <html lang="ja">
-      <body className="flex flex-col min-h-screen">
+      <body className="flex flex-col min-h-auto">
         <Header />
         <main className="flex-grow">{children}</main>
         <Footer />

@@ -1,5 +1,8 @@
 //src/app/rental/borrow/page.tsx
 //②-①　借りるページ(Googleマップ/予約)
+
+import GoogleMapComponent from '../../components/GoogleMap';
+
 export default function BorrowPage() {
   return (
     <div className="flex flex-col items-center justify-between min-h-screen">
@@ -10,7 +13,8 @@ export default function BorrowPage() {
         <p className="text-2xl font-bold">借りる</p>
 
         <div className="mt-6 w-80 h-60 border flex items-center justify-center">
-          <p>Googleマップ</p>
+          {/* Google Mapを表示 */}
+          <GoogleMapComponent />
         </div>
 
         <p className="mt-4">クリックしたら</p>
