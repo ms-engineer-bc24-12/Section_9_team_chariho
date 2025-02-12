@@ -7,7 +7,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import Button from '@/app/components/Button';
-import Link from 'next/link';
+import TermsContent from '@/app/components/TermsContent';
 
 export default function Register() {
   const [lastName, setLastName] = useState('');
@@ -18,6 +18,7 @@ export default function Register() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const [agree, setAgree] = useState(false);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,14 +52,21 @@ export default function Register() {
     setPhoneNumber(value);
   };
 
+  const handleCheckBoxChange = () => {
+    setAgree(!agree);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="p-6 flex flex-col items-center justify-center min-h-screen">
       <h1 className="text-2xl font-bold">新規登録</h1>
       <p className="mt-2">必要な情報を入力してください。</p>
 
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
-      <form onSubmit={handleRegister} className="flex flex-col gap-4 mt-4 w-80">
+      <form
+        onSubmit={handleRegister}
+        className="flex flex-col gap-4 mt-4 w-80 overflow-h-auto"
+      >
         {/* 姓と名（横並び） */}
         <div className="flex gap-2">
           <div className="w-1/2">
@@ -142,19 +150,32 @@ export default function Register() {
           required
         />
 
-        <Link
-          href="/mypage/terms"
-          className="text-blue-500 underline text-sm text-center mt-4"
-        >
-          利用規約
-        </Link>
+        {/* 利用規約の表示 */}
+        <label className="text-sm font-semibold">利用規約</label>
+        <TermsContent />
 
+        {/* 同意チェックボックス */}
+        <div className="mb-4 flex items-center">
+          <input
+            type="checkbox"
+            id="agree"
+            checked={agree}
+            onChange={handleCheckBoxChange}
+            className="mr-2"
+          />
+          <label htmlFor="agree" className="text-sm">
+            利用規約に同意する
+          </label>
+        </div>
         <Button
           type="submit"
-          className="bg-blue-500 text-white hover:bg-blue-700"
+          className="bg-blue-500 text-white hover:bg-blue-700 w-full"
         >
           登録
         </Button>
+        <br />
+        <br />
+        <br />
       </form>
     </div>
   );

@@ -1,5 +1,6 @@
 //src/app/mypage/history/page.tsx
 //③-① 利用履歴一覧ページ
+import Link from 'next/link';
 
 export default function HistoryPage() {
   return (
@@ -43,12 +44,13 @@ export default function HistoryPage() {
             <p>💰 料金:800円</p>
           </div>
         </div>
-      </div>
-
-      <div className="w-full">
-        <div className="flex justify-around bg-gray-100 p-4">
-          <p>🏠 ホーム</p>
-          <p>👤 マイページ</p>
+        <div className="mt-6">
+          <Link
+            href="/mypage"
+            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 text-center"
+          >
+            マイページへ戻る
+          </Link>
         </div>
       </div>
     </div>
