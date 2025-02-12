@@ -4,7 +4,7 @@
 
 'use client';
 import { useState, useEffect } from 'react';
-import EXIF from 'exif-js';
+//import EXIF from 'exif-js';
 
 export default function ReturnPage() {
   // ユーザーの現在地
@@ -20,6 +20,7 @@ export default function ReturnPage() {
   const [gpsData, setGpsData] = useState<{ lat: number; lng: number } | null>(
     null,
   );
+  const [isReturnable, setIsReturnable] = useState<boolean | null>(null); // 返却判定
 
   // 位置情報を取得する処理
   useEffect(() => {
@@ -49,30 +50,38 @@ export default function ReturnPage() {
       setPreviewURL(URL.createObjectURL(file));
 
       // Exif情報の読み込み
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        if (e.target && e.target.result instanceof ArrayBuffer) {
-          const exifData = EXIF.readFromBinaryFile(e.target.result);
+      // const reader = new FileReader();
+      // reader.onload = function (e) {
+      //   if (e.target && e.target.result instanceof ArrayBuffer) {
+      //     const exifData = EXIF.readFromBinaryFile(e.target.result);
+      //     console.log('Exif情報:', exifData);
 
-          //ここに追加！Exifデータをコンソールで確認
-          console.log('Exif情報:', exifData);
+      //     if (exifData.GPSLatitude && exifData.GPSLongitude) {
+      //       const lat = convertDMSToDD(
+      //         exifData.GPSLatitude,
+      //         exifData.GPSLatitudeRef,
+      //       );
+      //       const lng = convertDMSToDD(
+      //         exifData.GPSLongitude,
+      //         exifData.GPSLongitudeRef,
+      //       );
+      //       setGpsData({ lat, lng });
 
-          if (exifData.GPSLatitude && exifData.GPSLongitude) {
-            const lat = convertDMSToDD(
-              exifData.GPSLatitude,
-              exifData.GPSLatitudeRef,
-            );
-            const lng = convertDMSToDD(
-              exifData.GPSLongitude,
-              exifData.GPSLongitudeRef,
-            );
-            setGpsData({ lat, lng });
-          } else {
-            setGpsData(null);
-          }
-        }
-      };
-      reader.readAsArrayBuffer(file);
+      // 位置比較を行う
+      //           if (userLocation) {
+      //             const withinReturnArea = isWithinReturnArea(userLocation, {
+      //               lat,
+      //               lng,
+      //             });
+      //             setIsReturnable(withinReturnArea);
+      //           }
+      //         } else {
+      //           setGpsData(null);
+      //           setIsReturnable(null);
+      //         }
+      //       }
+      //     };
+      //     reader.readAsArrayBuffer(file);
     }
   };
 
@@ -88,81 +97,92 @@ export default function ReturnPage() {
     return dd;
   };
 
+  // 位置が一致しているか判定する関数（ハーバーサインの公式を使用）
+  const isWithinReturnArea = (
+    gps1: { lat: number; lng: number },
+    gps2: { lat: number; lng: number },
+    threshold: number = 50, // しきい値（メートル）
+  ) => {
+    const R = 6371000; // 地球の半径（m）
+
+    const lat1 = gps1.lat * (Math.PI / 180);
+    const lat2 = gps2.lat * (Math.PI / 180);
+    const deltaLat = (gps2.lat - gps1.lat) * (Math.PI / 180);
+    const deltaLng = (gps2.lng - gps1.lng) * (Math.PI / 180);
+
+    const a =
+      Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+      Math.cos(lat1) *
+        Math.cos(lat2) *
+        Math.sin(deltaLng / 2) *
+        Math.sin(deltaLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // 距離（m）
+
+    return distance <= threshold; // しきい値以内なら true
+  };
+
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen">
-      <div className="flex flex-col items-center justify-center flex-grow">
-        <p className="text-2xl font-bold">返却</p>
+    <div className="flex flex-col items-center">
+      <h2 className="text-2xl font-bold">返却ページ</h2>
+      <h2 className="text-2xl font-bold">返却判定</h2>
 
-        {/* Googleマップ（後で地図を表示する） */}
-        <div className="mt-6">
-          <p className="border p-4 rounded-md w-60 text-center">
-            🗺️ Googleマップ
-          </p>
-        </div>
-
-        <p className="text-lg font-semibold mt-6">
-          自転車の現在地と返却場所を表示
+      {/* 画像のGPS情報と現在地の表示 */}
+      {userLocation && (
+        <p className="mt-4 text-gray-700">
+          📍 現在地: 緯度 {userLocation.lat}, 経度 {userLocation.lng}
         </p>
+      )}
+      {gpsData ? (
+        <p className="mt-2 text-green-600">
+          📍 画像のGPS情報: 緯度 {gpsData.lat}, 経度 {gpsData.lng}
+        </p>
+      ) : (
+        <p className="mt-2 text-red-500">⚠️ 画像にGPS情報がありません</p>
+      )}
 
-        {/* 現在地を表示 */}
-        <div className="mt-6">
-          {userLocation ? (
-            <p className="border p-4 rounded-md w-60 text-center">
-              📍 緯度: {userLocation.lat}, 経度: {userLocation.lng}
-            </p>
-          ) : error ? (
-            <p className="border p-4 rounded-md w-60 text-center text-red-500">
-              ⚠️ {error}
-            </p>
-          ) : (
-            <p className="border p-4 rounded-md w-60 text-center">
-              📡 位置情報を取得中...
-            </p>
-          )}
-        </div>
+      {/* エラーメッセージ（返却判定） */}
+      {isReturnable !== null && (
+        <p
+          className={`mt-4 ${isReturnable ? 'text-green-600' : 'text-red-500'}`}
+        >
+          {isReturnable
+            ? '✅ 返却可能な範囲内です！'
+            : '❌ 返却場所が異なります！'}
+        </p>
+      )}
 
-        {/* 画像アップロードエリア */}
-        <div className="mt-6 flex flex-col items-center">
-          <p className="text-lg font-semibold">返却時の画像をアップロード</p>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="mt-2 border p-2 rounded-md"
+      {/* 画像アップロードエリア */}
+      <div className="mt-6 flex flex-col items-center">
+        <p className="text-lg font-semibold">返却時の画像をアップロード</p>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="mt-2 border p-2 rounded-md"
+        />
+
+        {/* 画像プレビュー */}
+        {previewURL && (
+          <img
+            src={previewURL}
+            alt="アップロード画像"
+            className="mt-4 w-60 h-auto rounded-md border"
           />
-
-          {/* 画像プレビュー */}
-          {previewURL && (
-            <img
-              src={previewURL}
-              alt="アップロード画像"
-              className="mt-4 w-60 h-auto rounded-md border"
-            />
-          )}
-
-          {/* 取得したGPS情報を表示 */}
-          {gpsData ? (
-            <p className="mt-4 text-green-600">
-              📍 画像のGPS情報: 緯度 {gpsData.lat}, 経度 {gpsData.lng}
-            </p>
-          ) : (
-            <p className="mt-4 text-red-500">⚠️ 画像にGPS情報がありません</p>
-          )}
-        </div>
-
-        {/* 返却ボタン */}
-        <div className="mt-6">
-          <p className="border p-4 rounded-md w-60 text-center">返却する</p>
-        </div>
+        )}
       </div>
 
-      {/* フッター */}
-      <div className="w-full">
-        <div className="flex justify-around bg-gray-100 p-4">
-          <p>🏠 ホーム</p>
-          <p>👤 マイページ</p>
-        </div>
-      </div>
+      {/* 返却ボタン（有効/無効） */}
+      <button
+        className={`mt-6 px-4 py-2 rounded-md ${
+          isReturnable
+            ? 'bg-green-500 text-white'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+        }`}
+        disabled={!isReturnable}
+      >
+        返却する
+      </button>
     </div>
   );
 }

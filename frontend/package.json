@@ -10,7 +10,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "exif-js": "^2.3.0",
+    "heic2any": "^0.0.4",
     "next": "15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
