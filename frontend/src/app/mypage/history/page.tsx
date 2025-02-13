@@ -1,6 +1,7 @@
 //src/app/mypage/history/page.tsx
 //③-① 利用履歴一覧ページ
 import Link from 'next/link';
+import Button from '@/app/components/Button';
 
 export default function HistoryPage() {
   return (
@@ -45,11 +46,8 @@ export default function HistoryPage() {
           </div>
         </div>
         <div className="mt-6">
-          <Link
-            href="/mypage"
-            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 text-center"
-          >
-            マイページへ戻る
+          <Link href="/mypage">
+            <Button> マイページへ戻る</Button>
           </Link>
         </div>
       </div>

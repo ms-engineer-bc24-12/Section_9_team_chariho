@@ -15,7 +15,7 @@ stripe.api_key = 'sk_test_51Qpl1SJzpJ9UCOiVkKPGfNqfPkzMQsHYN8x2XKFpAvk4gpj2DyMo6
 app = FastAPI()
 
 # PostgreSQLへの接続設定
-DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:password@host.docker.internal:5432/mydatabase')
+DATABASE_URL = "postgresql://postgres:password@host.docker.internal:5432/mydatabase"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

@@ -1,10 +1,10 @@
 //src/app/rental/borrow/page.tsx
 //②-①　借りるページ(Googleマップ/予約)
 'use client';
-
 import { useState } from 'react';
 import GoogleMapComponent from '../../components/GoogleMap';
 import Link from 'next/link';
+import Button from '@/app/components/Button';
 
 export default function BorrowPage() {
   const [selectedBike, setSelectedBike] = useState<{
@@ -27,12 +27,13 @@ export default function BorrowPage() {
   return (
     <div className="flex flex-col items-center justify-between min-h-screen">
       <div className="flex flex-col items-center justify-center flex-grow">
-        <p className="text-2xl font-bold">借りる</p>
+        <p className="text-5xl font-bold">🔎My Chari 予約</p>
 
         <div className="mt-6 w-80 h-60 border flex items-center justify-center">
           <GoogleMapComponent onMarkerClick={handleMarkerClick} />
         </div>
-
+        <p className="mt-4">予約したいMy Chariを選ぼう！</p>
+        <br />
         {/* 🛠 自転車選択前の表示 */}
         {!selectedBike && <p className="mt-4">自転車を選択してください</p>}
 
@@ -65,18 +66,11 @@ export default function BorrowPage() {
               },
             }}
           >
-            <button className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md">
+            <Button>
               予約する
-            </button>
+            </Button>
           </Link>
         )}
-      </div>
-
-      <div className="w-full">
-        <div className="flex justify-around bg-gray-100 p-4">
-          <p>🏠 ホーム</p>
-          <p>👤 マイページ</p>
-        </div>
       </div>
     </div>
   );
