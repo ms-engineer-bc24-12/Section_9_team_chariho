@@ -2,49 +2,51 @@
 //③ マイページ
 import React from 'react';
 import Link from 'next/link';
+import Button from '../components/Button';
 
 export default function MyPage() {
   return (
     <div className="flex flex-col items-center justify-between min-h-screen">
       <div className="flex flex-col items-center justify-center flex-grow">
-        <p className="text-3xl font-bold">マイページ</p>
-
+        <p className="text-5xl font-bold">🔔Mypage</p>
+        <br />
+        <br />
         <div className="mt-6">
           <div className="border p-4 rounded-md w-60 text-center">
             <p>通知一覧</p>
             <p>〇〇は返却が完了しました。</p>
           </div>
         </div>
-
+        <br />
         <div className="mt-6">
           <Link href="/mypage/history">
-            <p className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
+            <Button className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
               レンタル履歴
-            </p>
+            </Button>
           </Link>
         </div>
-
+        <br />
         <div className="mt-6">
           <Link href="/mypage/terms">
-            <p className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
+            <Button className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
               利用規約
-            </p>
+            </Button>
           </Link>
         </div>
-
+        <br />
         <div className="mt-6">
           <Link href="/mypage/contact">
-            <p className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
+            <Button className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
               問い合わせ
-            </p>
+            </Button>
           </Link>
         </div>
-
+        <br />
         <div className="mt-6">
           <Link href="/mypage/privacy">
-            <p className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
+            <Button className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
               プライバシーポリシー
-            </p>
+            </Button>
           </Link>
         </div>
       </div>
