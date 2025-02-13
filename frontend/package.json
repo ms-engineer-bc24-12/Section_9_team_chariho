@@ -10,17 +10,18 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "heic2any": "^0.0.4",
+    "@react-google-maps/api": "^2.20.6",
     "@stripe/react-stripe-js": "^3.1.1",
     "@stripe/stripe-js": "^5.6.0",
     "firebase": "^11.3.0",
-    "@react-google-maps/api": "^2.20.6",
+    "heic2any": "^0.0.4",
     "next": "15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/googlemaps": "^3.43.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
