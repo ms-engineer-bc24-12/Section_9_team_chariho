@@ -4,6 +4,7 @@
 
 'use client';
 import { useState, useEffect } from 'react';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import heic2any from 'heic2any';
 
 export default function ReturnPage() {
@@ -19,6 +20,9 @@ export default function ReturnPage() {
   const [previewURL, setPreviewURL] = useState<string | null>(null);
   const [isReturnable, setIsReturnable] = useState<boolean | null>(null); // 返却判定
 
+  // 📍 仮の保管場所 (Googleマップに表示)
+  const storageLocation = { lat: 35.9283422, lng: 139.5765821 };
+
   // 位置情報を取得する処理
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -28,6 +32,8 @@ export default function ReturnPage() {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
+
+          console.log('現在地:', position); //現在地の緯度経度をコンソールに表示
         },
         (error) => {
           setError('位置情報の取得に失敗しました');
@@ -64,13 +70,17 @@ export default function ReturnPage() {
           processedFile = new File(
             [convertedBlob[0]],
             file.name.replace(/\.heic$/i, '.jpg'),
-            { type: 'image/jpeg' },
+            {
+              type: 'image/jpeg',
+            },
           );
         } else if (convertedBlob instanceof Blob) {
           processedFile = new File(
             [convertedBlob],
             file.name.replace(/\.heic$/i, '.jpg'),
-            { type: 'image/jpeg' },
+            {
+              type: 'image/jpeg',
+            },
           );
         }
       } catch (error) {
@@ -84,16 +94,26 @@ export default function ReturnPage() {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="min-h-[120vh] overflow-auto flex flex-col items-center">
       <h2 className="text-2xl font-bold">返却ページ</h2>
-      <h2 className="text-2xl font-bold">返却判定</h2>
 
-      {/* 現在地の表示 */}
-      {userLocation && (
-        <p className="mt-4 text-gray-700">
-          📍 現在地: 緯度 {userLocation.lat}, 経度 {userLocation.lng}
-        </p>
-      )}
+      {/* 📌 Googleマップエリア */}
+      <div className="mt-4 w-full flex justify-center">
+        <div className="w-4/5 h-[300px] rounded-lg border overflow-hidden">
+          <LoadScript
+            googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+          >
+            <GoogleMap
+              mapContainerStyle={{ width: '100%', height: '100%' }}
+              center={storageLocation}
+              zoom={15}
+            >
+              {/* 貸出自転車　保管場所 */}
+              <Marker position={storageLocation} label="🚲" />
+            </GoogleMap>
+          </LoadScript>
+        </div>
+      </div>
 
       {/* 画像アップロードエリア */}
       <div className="mt-6 flex flex-col items-center">
@@ -110,20 +130,13 @@ export default function ReturnPage() {
           <img
             src={previewURL}
             alt="アップロード画像"
-            className="mt-4 w-60 h-auto rounded-md border"
+            className="mt-4 w-40 h-auto rounded-md border"
           />
         )}
       </div>
 
-      {/* 返却ボタン（有効/無効） */}
-      <button
-        className={`mt-6 px-4 py-2 rounded-md ${
-          isReturnable
-            ? 'bg-green-500 text-white'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }`}
-        disabled={!isReturnable}
-      >
+      {/* 返却ボタン */}
+      <button className="mt-6 px-4 py-2 rounded-md bg-blue-500 text-white">
         返却する
       </button>
     </div>
