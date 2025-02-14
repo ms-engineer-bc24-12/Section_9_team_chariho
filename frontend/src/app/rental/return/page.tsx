@@ -7,6 +7,11 @@ import { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import heic2any from 'heic2any';
 
+//仮の保管場所 (Googleマップに表示)
+//const storageLocation = { lat: 35.9283422, lng: 139.5765821 };現在地
+const storageLocation = { lat: 35.9285, lng: 139.57658 }; //保管場所と現在地が不一致
+//const storageLocation = { lat: 35.92838, lng: 139.57658 };//保管場所と現在地が閾値内
+
 export default function ReturnPage() {
   // ユーザーの現在地
   const [userLocation, setUserLocation] = useState<{
@@ -19,9 +24,6 @@ export default function ReturnPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewURL, setPreviewURL] = useState<string | null>(null);
   const [isReturnable, setIsReturnable] = useState<boolean | null>(null); // 返却判定
-
-  // 📍 仮の保管場所 (Googleマップに表示)
-  const storageLocation = { lat: 35.9283422, lng: 139.5765821 };
 
   // 位置情報を取得する処理
   useEffect(() => {
@@ -110,6 +112,9 @@ export default function ReturnPage() {
             >
               {/* 貸出自転車　保管場所 */}
               <Marker position={storageLocation} label="🚲" />
+
+              {/* ユーザーの現在地（現在地が取得できた場合に表示） */}
+              {userLocation && <Marker position={userLocation} label="📍" />}
             </GoogleMap>
           </LoadScript>
         </div>
