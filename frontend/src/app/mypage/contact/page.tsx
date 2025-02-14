@@ -4,6 +4,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Button from '@/app/components/Button';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -62,63 +63,54 @@ export default function ContactPage() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="p-6 max-w-md w-full border rounded-md shadow-md bg-white"
+            className="p-6 max-w-md w-full border rounded-md shadow-md block font-semibold bg-white text-orange-600"
           >
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold">名前</label>
+              <label>名前</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full mt-1 p-2 border rounded-md"
+                className="w-full mt-1 p-2 border text-black rounded-md"
               />
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold">
-                メールアドレス
-              </label>
+              <label>メールアドレス</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full mt-1 p-2 border rounded-md"
+                className="w-full mt-1 p-2 border text-black rounded-md"
               />
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold">
-                お問い合わせ内容
-              </label>
+              <label>お問い合わせ内容</label>
               <textarea
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 required
                 rows={4}
-                className="w-full mt-1 p-2 border rounded-md"
+                className="w-full mt-1 p-2 text-black border rounded-md"
               ></textarea>
             </div>
-
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
-            >
-              送信する
-            </button>
+            <div className="flex justify-center">
+              <Button className="border p-4 rounded-md w-60 text-center">
+                送信する
+              </Button>
+            </div>
           </form>
         )}
       </div>
       <div className="mt-6">
-        <Link
-          href="/mypage"
-          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 text-center"
-        >
-          マイページへ戻る
+        <Link href="/mypage">
+          <Button>マイページへ戻る</Button>
         </Link>
       </div>
     </div>

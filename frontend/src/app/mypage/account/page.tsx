@@ -4,6 +4,7 @@
 export default function AccountPage() {
   return (
     <div className="flex flex-col items-center justify-between min-h-screen">
+      <br />
       <h1 className="text-2xl font-bold">アカウント設定</h1>
 
       <div className="mt-4 w-80">

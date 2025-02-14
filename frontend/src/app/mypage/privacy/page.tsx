@@ -1,5 +1,6 @@
 //src/app/mypage/privacy/page.tsx
 //③-④プライバシーポリシーページ
+import Button from '@/app/components/Button';
 import Link from 'next/link';
 
 export default function PrivacyPolicyPage() {
@@ -82,11 +83,8 @@ export default function PrivacyPolicyPage() {
         </div>
       </div>
       <div className="mt-6">
-        <Link
-          href="/mypage"
-          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 text-center"
-        >
-          マイページへ戻る
+        <Link href="/mypage">
+          <Button>マイページへ戻る</Button>
         </Link>
       </div>
     </div>
