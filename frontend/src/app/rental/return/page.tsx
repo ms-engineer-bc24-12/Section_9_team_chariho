@@ -3,7 +3,9 @@
 //画像アップロード・決済
 
 'use client';
-import { useState, useEffect } from 'react';
+
+import { useState } from 'react';
+import { useLocation } from '@/hooks/useLocation';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import heic2any from 'heic2any';
 
@@ -13,39 +15,11 @@ const storageLocation = { lat: 35.9285, lng: 139.57658 }; //保管場所と現�
 //const storageLocation = { lat: 35.92838, lng: 139.57658 };//保管場所と現在地が閾値内
 
 export default function ReturnPage() {
-  // ユーザーの現在地
-  const [userLocation, setUserLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
   // 画像アップロード用の state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewURL, setPreviewURL] = useState<string | null>(null);
   const [isReturnable, setIsReturnable] = useState<boolean | null>(null); // 返却判定
-
-  // 位置情報を取得する処理
-  useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-
-          console.log('現在地:', position); //現在地の緯度経度をコンソールに表示
-        },
-        (error) => {
-          setError('位置情報の取得に失敗しました');
-          console.error('位置情報エラー:', error);
-        },
-      );
-    } else {
-      setError('Geolocation API がサポートされていません');
-    }
-  }, []);
+  const { userLocation, error } = useLocation();
 
   // 📌 HEIC画像の変換を追加
   const handleFileChange = async (
@@ -96,8 +70,25 @@ export default function ReturnPage() {
   };
 
   return (
-    <div className="min-h-[120vh] overflow-auto flex flex-col items-center">
+    <div className="min-h-[140vh] overflow-auto flex flex-col items-center">
       <h2 className="text-2xl font-bold">返却ページ</h2>
+
+      {/* エラーがあれば表示 */}
+      {error && <p className="text-red-500">{error}</p>}
+
+      {/* 位置情報が取得できている場合に表示 */}
+      {userLocation ? (
+        <div>
+          <p>
+            現在地: 緯度 {userLocation.lat}, 経度 {userLocation.lng}
+          </p>
+          <p>
+            保管場所: 緯度 {storageLocation.lat}, 経度 {storageLocation.lng}
+          </p>
+        </div>
+      ) : (
+        <p>現在地を取得中...</p>
+      )}
 
       {/* 📌 Googleマップエリア */}
       <div className="mt-4 w-full flex justify-center">
