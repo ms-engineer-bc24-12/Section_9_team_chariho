@@ -1,27 +1,40 @@
 //src/app/rental/borrow/page.tsx
 //②-①　借りるページ(Googleマップ/予約)
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import GoogleMapComponent from '../../components/GoogleMap';
 import Link from 'next/link';
 import Button from '@/app/components/Button';
 
-export default function BorrowPage() {
-  const [selectedBike, setSelectedBike] = useState<{
-    id: number;
-    name: string;
-  } | null>(null);
-  const [isSelected, setIsSelected] = useState(false); // チェックボックスの状態を管理
+type Bike = {
+  id: number;
+  name: string;
+  price: number;
+  rentalPeriod: string;
+  lockType: string;
+  location: { lat: number; lng: number };
+};
 
-  // マーカークリック時に自転車の情報をセット
-  const handleMarkerClick = (bike: { id: number; name: string }) => {
+export default function BorrowPage() {
+  const [bikes, setBikes] = useState<Bike[]>([]);
+  const [selectedBike, setSelectedBike] = useState<Bike | null>(null);
+  const [isSelected, setIsSelected] = useState(false);
+
+  // 🚲 ローカルストレージから貸出可能な自転車リストを取得
+  useEffect(() => {
+    const storedBikes = JSON.parse(localStorage.getItem('bikes') || '[]');
+    setBikes(storedBikes);
+  }, []);
+
+  // 🏷 Googleマップのマーカークリック時に自転車を選択
+  const handleMarkerClick = (bike: Bike) => {
     setSelectedBike(bike);
-    setIsSelected(false); // 自転車がクリックされるたびにチェックボックスをリセット
+    setIsSelected(false); // チェックボックスをリセット
   };
 
-  // チェックボックスの変更を処理
+  // ✅ チェックボックスの変更を処理
   const handleCheckboxChange = () => {
-    setIsSelected(!isSelected); // チェックボックスの状態を反転
+    setIsSelected(!isSelected);
   };
 
   return (
@@ -29,33 +42,39 @@ export default function BorrowPage() {
       <div className="flex flex-col items-center justify-center flex-grow">
         <p className="text-5xl font-bold">🔎My Chari 予約</p>
 
+        {/* 📍 Googleマップを表示 */}
         <div className="mt-6 w-80 h-60 border flex items-center justify-center">
-          <GoogleMapComponent onMarkerClick={handleMarkerClick} />
+          <GoogleMapComponent bikes={bikes} onMarkerClick={handleMarkerClick} />
         </div>
+
         <p className="mt-4">予約したいMy Chariを選ぼう！</p>
-        <br />
-        {/* 🛠 自転車選択前の表示 */}
+
+        {/* 🚲 自転車選択前のメッセージ */}
         {!selectedBike && <p className="mt-4">自転車を選択してください</p>}
 
-        {/* 🛠 自転車選択後に一覧を表示 */}
+        {/* 🚲 自転車選択後の詳細表示 */}
         {selectedBike && (
           <div className="flex flex-col mt-2 items-center">
-            <p className="text-lg font-semibold text-center">自転車一覧</p>
-            <div className="p-2 border rounded-md mt-2">
-              <p>選択された自転車: {selectedBike.name}</p>
-              <p>ID: {selectedBike.id}</p>
+            <p className="text-lg font-semibold text-center">自転車情報</p>
+            <div className="p-4 border rounded-md mt-2 w-80">
+              <p>🚲 名前: {selectedBike.name}</p>
+              <p>💰 料金: {selectedBike.price}円/時間</p>
+              <p>📅 期間: {selectedBike.rentalPeriod}</p>
+              <p>🔑 鍵タイプ: {selectedBike.lockType}</p>
               <input
                 type="checkbox"
                 id={`bike-${selectedBike.id}`}
-                checked={isSelected} // チェックボックスの状態を反映
-                onChange={handleCheckboxChange} // チェックボックスをクリックした時に状態を更新
+                checked={isSelected}
+                onChange={handleCheckboxChange}
               />
-              <label htmlFor={`bike-${selectedBike.id}`}>選択</label>
+              <label htmlFor={`bike-${selectedBike.id}`} className="ml-2">
+                選択
+              </label>
             </div>
           </div>
         )}
 
-        {/* 予約ページに遷移するリンク */}
+        {/* 予約ページへ遷移 */}
         {selectedBike && isSelected && (
           <Link
             href={{
@@ -63,6 +82,9 @@ export default function BorrowPage() {
               query: {
                 bikeId: selectedBike.id.toString(),
                 bikeName: selectedBike.name,
+                price: selectedBike.price.toString(),
+                rentalPeriod: selectedBike.rentalPeriod,
+                lockType: selectedBike.lockType,
               },
             }}
           >
