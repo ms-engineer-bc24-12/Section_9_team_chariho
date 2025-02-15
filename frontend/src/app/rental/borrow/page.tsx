@@ -66,9 +66,7 @@ export default function BorrowPage() {
               },
             }}
           >
-            <Button>
-              予約する
-            </Button>
+            <Button>予約する</Button>
           </Link>
         )}
       </div>

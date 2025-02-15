@@ -6,68 +6,17 @@
 
 import { useState } from 'react';
 import { useLocation } from '@/hooks/useLocation';
+import ImageUploader from '@/app/components/ImageUploader';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import heic2any from 'heic2any';
 
-//仮の保管場所 (Googleマップに表示)
-//const storageLocation = { lat: 35.9283422, lng: 139.5765821 };現在地
-const storageLocation = { lat: 35.9285, lng: 139.57658 }; //保管場所と現在地が不一致
-//const storageLocation = { lat: 35.92838, lng: 139.57658 };//保管場所と現在地が閾値内
+// 仮の保管場所 (Googleマップに表示)
+const storageLocation = { lat: 35.9285, lng: 139.57658 }; // 保管場所と現在地が不一致
 
 export default function ReturnPage() {
   // 画像アップロード用の state
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewURL, setPreviewURL] = useState<string | null>(null);
   const [isReturnable, setIsReturnable] = useState<boolean | null>(null); // 返却判定
   const { userLocation, error } = useLocation();
-
-  // 📌 HEIC画像の変換を追加
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    if (!event.target.files || event.target.files.length === 0) return;
-    const file = event.target.files[0];
-
-    let processedFile = file;
-
-    // 📷 HEICなら JPG/PNG に変換
-    if (
-      file.type === 'image/heic' ||
-      file.name.toLowerCase().endsWith('.heic')
-    ) {
-      try {
-        const convertedBlob = await heic2any({
-          blob: file,
-          toType: 'image/jpeg',
-          quality: 0.8, // 画質 80%
-        });
-
-        if (Array.isArray(convertedBlob)) {
-          processedFile = new File(
-            [convertedBlob[0]],
-            file.name.replace(/\.heic$/i, '.jpg'),
-            {
-              type: 'image/jpeg',
-            },
-          );
-        } else if (convertedBlob instanceof Blob) {
-          processedFile = new File(
-            [convertedBlob],
-            file.name.replace(/\.heic$/i, '.jpg'),
-            {
-              type: 'image/jpeg',
-            },
-          );
-        }
-      } catch (error) {
-        console.error('HEIC変換エラー:', error);
-        return;
-      }
-    }
-
-    setSelectedFile(processedFile);
-    setPreviewURL(URL.createObjectURL(processedFile));
-  };
 
   return (
     <div className="min-h-[140vh] overflow-auto flex flex-col items-center">
@@ -80,10 +29,12 @@ export default function ReturnPage() {
       {userLocation ? (
         <div>
           <p>
-            現在地: 緯度 {userLocation.lat}, 経度 {userLocation.lng}
+            <strong>現在地:</strong> 緯度 {userLocation.lat}, 経度{' '}
+            {userLocation.lng}
           </p>
           <p>
-            保管場所: 緯度 {storageLocation.lat}, 経度 {storageLocation.lng}
+            <strong>保管場所:</strong> 緯度 {storageLocation.lat}, 経度{' '}
+            {storageLocation.lng}
           </p>
         </div>
       ) : (
@@ -111,25 +62,8 @@ export default function ReturnPage() {
         </div>
       </div>
 
-      {/* 画像アップロードエリア */}
-      <div className="mt-6 flex flex-col items-center">
-        <p className="text-lg font-semibold">返却時の画像をアップロード</p>
-        <input
-          type="file"
-          accept=".heic, .jpg, .jpeg, .png"
-          onChange={handleFileChange}
-          className="mt-2 border p-2 rounded-md"
-        />
-
-        {/* 画像プレビュー */}
-        {previewURL && (
-          <img
-            src={previewURL}
-            alt="アップロード画像"
-            className="mt-4 w-40 h-auto rounded-md border"
-          />
-        )}
-      </div>
+      {/* 📌 画像アップロードコンポーネント */}
+      <ImageUploader onFileSelect={setSelectedFile} />
 
       {/* 返却ボタン */}
       <button className="mt-6 px-4 py-2 rounded-md bg-blue-500 text-white">
