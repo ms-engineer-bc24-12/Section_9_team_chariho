@@ -6,8 +6,10 @@
 
 import { useState } from 'react';
 import { useLocation } from '@/hooks/useLocation';
+import Map from '@/app/components/Map';
+import Button from '@/app/components/Button';
 import ImageUploader from '@/app/components/ImageUploader';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+//import ImageUploader from '@/app/components/WebCameraCapture';
 
 // 仮の保管場所 (Googleマップに表示)
 const storageLocation = { lat: 35.9285, lng: 139.57658 }; // 保管場所と現在地が不一致
@@ -44,21 +46,15 @@ export default function ReturnPage() {
       {/* 📌 Googleマップエリア */}
       <div className="mt-4 w-full flex justify-center">
         <div className="w-4/5 h-[300px] rounded-lg border overflow-hidden">
-          <LoadScript
-            googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-          >
-            <GoogleMap
-              mapContainerStyle={{ width: '100%', height: '100%' }}
-              center={storageLocation}
-              zoom={15}
-            >
-              {/* 貸出自転車　保管場所 */}
-              <Marker position={storageLocation} label="🚲" />
-
-              {/* ユーザーの現在地（現在地が取得できた場合に表示） */}
-              {userLocation && <Marker position={userLocation} label="📍" />}
-            </GoogleMap>
-          </LoadScript>
+          <Map
+            center={storageLocation}
+            markers={[
+              { id: 1, position: storageLocation, label: '🚲' }, // 保管場所
+              userLocation
+                ? { id: 2, position: userLocation, label: '📍' } // ユーザー現在地
+                : null,
+            ].filter((marker) => marker !== null)}
+          />
         </div>
       </div>
 
@@ -66,9 +62,7 @@ export default function ReturnPage() {
       <ImageUploader onFileSelect={setSelectedFile} />
 
       {/* 返却ボタン */}
-      <button className="mt-6 px-4 py-2 rounded-md bg-blue-500 text-white">
-        返却する
-      </button>
+      <Button>返却する</Button>
     </div>
   );
 }
