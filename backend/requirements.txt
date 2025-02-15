@@ -60,3 +60,4 @@ asyncpg
 alembic
 psycopg2
 stripe
+celery
