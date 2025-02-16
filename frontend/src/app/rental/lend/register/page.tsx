@@ -1,5 +1,6 @@
 //src/app/rental/register/page.tsx
 //②-②-①　自転車情報登録ページ　(画像/場所/金額/期間/鍵情報) →　完了アラート表示 (②-②がめんへ自動遷移)
+
 'use client';
 
 import React, { useState } from 'react';
@@ -38,9 +39,6 @@ export default function RegisterBikePage() {
 
     setIsRegistered(true);
   };
-
-  // 🚲 貸出自転車　保管場所の仮データを state に保持
-  const [storageLocation] = useState({ lat: 35.928339, lng: 139.5765827 });
 
   return (
     <div className="flex flex-col items-center justify-between min-h-screen px-4">
