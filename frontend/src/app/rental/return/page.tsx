@@ -7,8 +7,13 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from '@/hooks/useLocation';
 import Map from '@/app/components/Map';
+import dynamic from 'next/dynamic';
 import Button from '@/app/components/Button';
-import ImageUploader from '@/app/components/ImageUploader';
+//import ImageUploader from '@/app/components/ImageUploader';
+
+const ImageUploader = dynamic(() => import('@/app/components/ImageUploader'), {
+  ssr: false,
+});
 
 // 仮の保管場所 (Googleマップに表示)
 //const storageLocation = { lat: 35.9285, lng: 139.57658 }; //返却不可
