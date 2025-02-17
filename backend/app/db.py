@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import os
 
 DATABASE_URL = "postgresql://postgres:password@host.docker.internal:5432/mydatabase"
 
@@ -11,4 +10,13 @@ Base = declarative_base()
 
 # テーブルを作成する関数
 def init_db():
+    from app.models import User  # インポートをここで行い循環参照を防ぐ
     Base.metadata.create_all(bind=engine)
+
+# データベースのセッションを取得する関数を追加
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
