@@ -12,7 +12,7 @@ import Button from '@/app/components/Button';
 import { useLocation } from '@/hooks/useLocation';
 
 export default function RegisterBikePage() {
-  const { userLocation, error } = useLocation(); // 現在地を取得
+  const { userLocation, error, getLocation } = useLocation();
   const [bikeName, setBikeName] = useState('');
   const [price, setPrice] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -49,6 +49,11 @@ export default function RegisterBikePage() {
     localStorage.setItem('bikes', JSON.stringify([...existingBikes, newBike]));
 
     setIsRegistered(true);
+  };
+
+  // 位置情報を再取得する処理
+  const handleGetLocation = () => {
+    getLocation();
   };
 
   return (
@@ -140,7 +145,15 @@ export default function RegisterBikePage() {
 
             {error && <p className="text-red-500 text-sm">{error}</p>}
 
-            <div className="flex justify-center">
+            {/* 位置情報を再取得ボタン */}
+            <button
+              onClick={handleGetLocation}
+              className="mt-4 bg-blue-400 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+            >
+              位置情報を再取得
+            </button>
+
+            <div className="flex justify-center mt-6">
               <Button
                 onClick={handleRegister}
                 className="border p-4 rounded-md w-60 text-center"
