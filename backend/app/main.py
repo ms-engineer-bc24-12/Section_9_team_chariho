@@ -5,16 +5,20 @@ from sqlalchemy.orm import sessionmaker
 import stripe 
 from datetime import datetime
 from app.tasks import update_usage  # tasks.pyからupdate_usageタスクをインポート@app.post("/start-usage/")
-from app.routers import users  # usersルーターをインポート
+from app.routers import users  # users.py ルーターをインポート
+from app.routers import auth  # auth.py をインポート
 from app.db import init_db
 from contextlib import asynccontextmanager
+from app.middleware import add_cors_middleware
 
 stripe.api_key = 'sk_test_51Qpl1SJzpJ9UCOiVkKPGfNqfPkzMQsHYN8x2XKFpAvk4gpj2DyMo6shH6fD7LuKdKYW4ynl2eyPbGAMZzKOHh4Fb00yeVnWvpv'
 
 
 app = FastAPI()
 
+app.include_router(auth.router)
 app.include_router(users.router)
+add_cors_middleware(app)
 
 # PostgreSQLへの接続設定
 DATABASE_URL = "postgresql://postgres:password@host.docker.internal:5432/mydatabase"

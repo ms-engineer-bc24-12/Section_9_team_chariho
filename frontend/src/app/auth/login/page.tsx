@@ -20,10 +20,34 @@ export default function Login() {
     setError(''); // エラーメッセージをリセット
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push('/rental'); // ログイン成功時に `/rental` へ遷移
+      // Firebase認証を行い、IDトークンを取得
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      const user = userCredential.user;
+      const token = await user.getIdToken();
+
+      // IDトークンをバックエンドに送信
+      const response = await fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id_token: token }),
+      });
+
+      const data = await response.json();
+      console.log(data); // レスポンスデータの内容をログに出力
+
+      // レスポンスをチェック
+      if (response.ok) {
+        router.push('/rental'); // ログイン成功時に `/rental` へ遷移
+      } else {
+        setError('ログイン失敗');
+      }
     } catch (error) {
-      setError('正しい内容を入力してください'); // エラーメッセージを設定
       console.error(error);
     }
   };
@@ -54,12 +78,7 @@ export default function Login() {
         />
 
         {/* ログインボタン */}
-        <Button
-          type="submit"
-          className="bg-blue-500 text-white hover:bg-blue-700"
-        >
-          ログイン
-        </Button>
+        <Button type="submit">ログイン</Button>
       </form>
 
       {/* 新規登録ページへのリンク */}

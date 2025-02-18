@@ -8,6 +8,7 @@ import { auth } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import Button from '@/app/components/Button';
 import TermsContent from '@/app/components/TermsContent';
+import { FirebaseError } from 'firebase/app';
 
 export default function Register() {
   const [lastName, setLastName] = useState('');
@@ -16,6 +17,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [address, setAddress] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
   const [agree, setAgree] = useState(false);
@@ -38,11 +40,54 @@ export default function Register() {
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert('登録が完了しました！');
-      router.push('/auth/login');
+      // Firebaseでユーザーを作成
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      console.log('User created:', userCredential); // ユーザーが作成されたか確認
+
+      // FirebaseユーザーのIDを取得
+      const user = userCredential.user;
+      const token = await user.getIdToken(); // JWT トークン取得
+
+      // FastAPIで追加情報を保存
+      const response = await fetch('http://localhost:8000/register', {
+        // FastAPIのエンドポイントにPOSTリクエスト
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // JWT トークンを送る
+        },
+        body: JSON.stringify({
+          firebase_uid: user.uid,
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          phone_number: phoneNumber,
+          address,
+        }),
+      });
+
+      if (response.ok) {
+        alert('登録が完了しました！');
+        router.push('/auth/login');
+      } else {
+        const errorData = await response.json();
+        setError('情報の保存に失敗しました。');
+        console.error(errorData);
+      }
     } catch (error) {
-      setError('登録に失敗しました。入力内容を確認してください。');
+      if (error instanceof FirebaseError) {
+        if (error.code === 'auth/email-already-in-use') {
+          setError('このメールアドレスはすでに登録されています。');
+        } else {
+          setError('登録に失敗しました。入力内容を確認してください。');
+        }
+      } else {
+        setError('予期しないエラーが発生しました。');
+      }
       console.error(error);
     }
   };
@@ -96,6 +141,8 @@ export default function Register() {
         <label className="text-sm font-semibold">住所</label>
         <input
           type="text"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
           placeholder="住所を入力してください"
           className="border p-2 rounded-md w-full"
           required
@@ -167,12 +214,7 @@ export default function Register() {
             利用規約に同意する
           </label>
         </div>
-        <Button
-          type="submit"
-          className="bg-blue-500 text-white hover:bg-blue-700 w-full"
-        >
-          登録
-        </Button>
+        <Button type="submit">登録</Button>
         <br />
         <br />
         <br />
