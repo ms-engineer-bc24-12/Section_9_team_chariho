@@ -7,13 +7,13 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from '@/hooks/useLocation';
 import Map from '@/app/components/Map';
-import dynamic from 'next/dynamic';
+//import dynamic from 'next/dynamic';
 import Button from '@/app/components/Button';
-//import ImageUploader from '@/app/components/ImageUploader';
+import CameraUploader from '@/app/components/CameraUploader';
 
-const ImageUploader = dynamic(() => import('@/app/components/ImageUploader'), {
-  ssr: false,
-});
+// const ImageUploader = dynamic(() => import('@/app/components/ImageUploader'), {
+//   ssr: false,
+// });
 
 // 仮の保管場所 (Googleマップに表示)
 //const storageLocation = { lat: 35.9285, lng: 139.57658 }; //返却不可
@@ -23,9 +23,10 @@ const storageLocation = { lat: 35.928339, lng: 139.5765827 }; //返却可能
 const LAT_LNG_THRESHOLD = 0.00009;
 
 export default function ReturnPage() {
-  const { userLocation, error } = useLocation();
+  const { userLocation, error, getLocation } = useLocation();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isReturnable, setIsReturnable] = useState<boolean | null>(null); // 返却判定
+  const [isUploaded, setIsUploaded] = useState<boolean>(false); //画像アップロード完了フラグ（将来のFirebase対応）
 
   // 位置情報が返却範囲内にあるか判定する関数
   const isPointInRectangle = (point: { lat: number; lng: number }) => {
@@ -48,7 +49,7 @@ export default function ReturnPage() {
     <div className="min-h-[140vh] overflow-auto flex flex-col items-center">
       <h2 className="text-2xl font-bold">返却ページ</h2>
 
-      {/* エラーがあれば表示 */}
+      {/* 位置情報（現在地取得）のエラーがあれば表示 */}
       {error && <p className="text-red-500">{error}</p>}
 
       {/* 返却判定メッセージ */}
@@ -76,6 +77,14 @@ export default function ReturnPage() {
         <p>現在地を取得中...</p>
       )}
 
+      {/* 常に「現在地を更新してください」の説明を表示 */}
+      <div className="mt-4 flex flex-col items-center">
+        <Button onClick={getLocation}>📍 現在地を更新</Button>
+        <p className="mt-2 text-sm text-gray-600 text-center">
+          正しい位置に移動し、「現在地を更新」ボタンを押してください。
+        </p>
+      </div>
+
       {/* Googleマップエリア */}
       <div className="mt-4 w-full flex justify-center">
         <div className="w-4/5 h-[300px] rounded-lg border overflow-hidden">
@@ -92,10 +101,17 @@ export default function ReturnPage() {
       </div>
 
       {/* 画像アップロードコンポーネント */}
-      <ImageUploader onFileSelect={setSelectedFile} />
+      <CameraUploader
+        onPhotoSelect={(file) => {
+          console.log('選択した画像:', file);
+          setSelectedFile(file);
+          //ここで将来的に Firebase へアップロードする処理を追加
+          setIsUploaded(true); // 仮のアップロード成功フラグ
+        }}
+      />
 
       {/* 返却ボタン(返却可能なときだけ表示） */}
-      {isReturnable && selectedFile && (
+      {isReturnable && selectedFile && isUploaded && (
         <div className="mt-6">
           <Button>返却する</Button>
         </div>
