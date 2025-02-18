@@ -1,5 +1,6 @@
 //src/app/rental/register/page.tsx
 //②-②-①　自転車情報登録ページ　(画像/場所/金額/期間/鍵情報) →　完了アラート表示 (②-②がめんへ自動遷移)
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
