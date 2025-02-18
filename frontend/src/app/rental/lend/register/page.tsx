@@ -3,24 +3,35 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
 import Button from '@/app/components/Button';
+import { useLocation } from '@/hooks/useLocation';
 
 export default function RegisterBikePage() {
+  const { userLocation, error } = useLocation(); // 現在地を取得
   const [bikeName, setBikeName] = useState('');
   const [price, setPrice] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [lockType, setLockType] = useState('ダイヤル式');
-  const [storageLocation] = useState({ lat: 35.928339, lng: 139.5765827 });
+  const [storageLocation, setStorageLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
   const [isRegistered, setIsRegistered] = useState(false);
 
+  useEffect(() => {
+    if (userLocation) {
+      setStorageLocation(userLocation);
+    }
+  }, [userLocation]);
+
   const handleRegister = () => {
-    if (!bikeName || !price || !startDate || !endDate) {
+    if (!bikeName || !price || !startDate || !endDate || !storageLocation) {
       alert('すべての項目を入力してください');
       return;
     }
@@ -76,7 +87,7 @@ export default function RegisterBikePage() {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 className="w-full p-2 border rounded-md"
-                placeholder="例: 500"
+                placeholder="例: 100"
               />
             </label>
 
@@ -121,9 +132,13 @@ export default function RegisterBikePage() {
             </label>
 
             <p className="text-sm text-gray-600 mb-4">
-              🚲 保管場所（仮）: 緯度 {storageLocation.lat}, 経度{' '}
-              {storageLocation.lng}
+              🚲 保管場所（現在地）:{' '}
+              {storageLocation
+                ? `緯度 ${storageLocation.lat}, 経度 ${storageLocation.lng}`
+                : '取得中...'}
             </p>
+
+            {error && <p className="text-red-500 text-sm">{error}</p>}
 
             <div className="flex justify-center">
               <Button

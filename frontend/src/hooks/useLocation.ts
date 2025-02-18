@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 
 export function useLocation() {
-  // ユーザーの現在地
   const [userLocation, setUserLocation] = useState<{
     lat: number;
     lng: number;

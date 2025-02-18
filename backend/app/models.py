@@ -1,15 +1,21 @@
-from sqlalchemy import Column, Integer, String, Text, DECIMAL, JSON, TIMESTAMP, ForeignKey, CheckConstraint
+from sqlalchemy import Column, Integer, String, DateTime, Text, DECIMAL, JSON, TIMESTAMP, ForeignKey, CheckConstraint
 from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION # PostgreSQLのDOUBLE PRECISION型を使用するためにインポート
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func # 現在時刻を取得するために使用
 from app.db import Base  # db.py から Base をインポート
 
 class User(Base):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    email = Column(String, unique=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True) 
+    firebase_uid = Column(String, unique=True, nullable=False) 
+    first_name = Column(String, nullable=True)
+    last_name = Column(String, nullable=True)
+    address = Column(String, nullable=True)
+    phone_number = Column(String, nullable=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
 # ユーザーと自転車のリレーション（1対多）
     bicycles = relationship("Bicycle", back_populates="owner", cascade="all, delete-orphan")
@@ -40,4 +46,3 @@ class Bicycle(Base):
         CheckConstraint("rental_price_per_hour >= 0", name="check_rental_price_positive"),
         CheckConstraint("lock_type IN ('key', 'dial')", name="check_lock_type"),
     )
-
