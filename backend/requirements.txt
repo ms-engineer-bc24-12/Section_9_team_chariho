@@ -61,4 +61,3 @@ alembic
 psycopg2
 stripe
 celery
-email-validator
