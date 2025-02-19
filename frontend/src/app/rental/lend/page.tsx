@@ -30,7 +30,8 @@ export default function LendPage() {
   return (
     <div className="flex flex-col items-center justify-between min-h-screen">
       <div className="flex flex-col items-center justify-center flex-grow">
-        <p className="text-5xl font-bold">🤝My Chari</p>
+        <p className="text-4xl font-bold">🤝My Chari</p>
+        <br />
         <br />
         <div className="mt-6">
           <Link href="/rental/lend/register">
@@ -40,7 +41,7 @@ export default function LendPage() {
           </Link>
         </div>
         <br />
-        <p className="text-3xl font-semibold mt-6">My Chari 一覧</p>
+        <p className="text-3xl font-semibold mt-6">🚲My Chari 一覧</p>
 
         {bikes.length === 0 ? (
           <p className="text-gray-500 mt-4">登録された自転車はありません</p>
@@ -52,7 +53,7 @@ export default function LendPage() {
                 className="flex items-center justify-between border p-4 rounded-md w-80"
               >
                 <span>
-                  {bike.name} - {bike.price}円
+                  {bike.name} (価格：{bike.price}円)
                 </span>
                 <button
                   onClick={() => handleDelete(bike.id)}

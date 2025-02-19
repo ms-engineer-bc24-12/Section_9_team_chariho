@@ -8,20 +8,13 @@ export default function MyPage() {
   return (
     <div className="flex flex-col items-center justify-between min-h-screen">
       <div className="flex flex-col items-center justify-center flex-grow">
-        <p className="text-5xl font-bold">🔔Mypage</p>
+        <p className="text-4xl font-bold">👤Mypage</p>
         <br />
-        <br />
-        <div className="mt-6">
-          <div className="border p-4 rounded-md w-60 text-center">
-            <p>通知一覧</p>
-            <p>〇〇は返却が完了しました。</p>
-          </div>
-        </div>
         <br />
         <div className="mt-6">
           <Link href="/mypage/history">
             <Button className="border p-4 rounded-md w-60 text-center cursor-pointer hover:bg-gray-100">
-              レンタル履歴
+              利用履歴
             </Button>
           </Link>
         </div>

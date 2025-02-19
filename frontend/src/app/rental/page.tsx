@@ -6,7 +6,7 @@ import Button from '../components/Button';
 export default function RentalPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <p className="text-5xl font-bold">🚲Home</p>
+      <p className="text-4xl font-bold">🏠Home</p>
       <br />
       <br />
       <div className="flex flex-col gap-4 mt-6">

@@ -5,9 +5,10 @@ import Link from 'next/link';
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="flex flex-col items-center min-h-screen p-20">
-      <div className="flex flex-col items-center justify-center w-full">
-        <p className="text-2xl font-bold mb-6">プライバシーポリシー</p>
+    <div className="flex flex-col items-center justify-between min-h-screen p-20 pt-16">
+      <div className="flex flex-col items-center justify-center">
+        <p className="text-2xl font-bold mt-6">プライバシーポリシー</p>
+        <br />
         <div className="p-6 max-w-3xl text-left border rounded-md shadow-md bg-white overflow-y-auto max-h-[500px]">
           <p className="text-lg font-semibold">1. はじめに</p>
           <p className="mb-4">
@@ -82,11 +83,9 @@ export default function PrivacyPolicyPage() {
           </p>
         </div>
       </div>
-      <div className="mt-6">
-        <Link href="/mypage">
-          <Button>マイページへ戻る</Button>
-        </Link>
-      </div>
+      <Link href="/mypage">
+        <Button>マイページへ戻る</Button>
+      </Link>
     </div>
   );
 }

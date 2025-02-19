@@ -39,10 +39,10 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen p-20">
-      <div className="flex flex-col items-center justify-center w-full">
-        <p className="text-2xl font-bold mb-6">問い合わせフォーム</p>
-
+    <div className="flex flex-col items-center justify-between min-h-screen p-20 pt-16">
+      <div className="flex flex-col items-center justify-center">
+        <p className="text-2xl font-bold mt-6">📤問い合わせフォーム</p>
+        <br />
         {submitted ? (
           <div className="p-6 max-w-md text-center border rounded-md shadow-md bg-white">
             <p className="text-lg font-semibold">送信完了しました！</p>
@@ -63,7 +63,7 @@ export default function ContactPage() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="p-6 max-w-md w-full border rounded-md shadow-md block font-semibold bg-white text-orange-600"
+            className="p-12 max-w-md w-full border rounded-md shadow-md block font-semibold bg-white text-orange-600"
           >
             <div className="mb-4">
               <label>名前</label>
@@ -100,6 +100,7 @@ export default function ContactPage() {
                 className="w-full mt-1 p-2 text-black border rounded-md"
               ></textarea>
             </div>
+            <br />
             <div className="flex justify-center">
               <Button className="border p-4 rounded-md w-60 text-center">
                 送信する
@@ -107,8 +108,7 @@ export default function ContactPage() {
             </div>
           </form>
         )}
-      </div>
-      <div className="mt-6">
+        <br />
         <Link href="/mypage">
           <Button>マイページへ戻る</Button>
         </Link>

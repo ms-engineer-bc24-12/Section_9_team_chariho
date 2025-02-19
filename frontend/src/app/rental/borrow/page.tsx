@@ -38,24 +38,26 @@ export default function BorrowPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen">
-      <div className="flex flex-col items-center justify-center flex-grow">
-        <p className="text-5xl font-bold">🔎My Chari 予約</p>
-
+    <div className="flex flex-col items-center justify-between min-h-[140vh] pt-16">
+      <div className="flex flex-col items-center flex-grow">
+        <p className="text-4xl font-bold mt-6">🔎My Chari 予約</p>
+        <br />
+        <br />
+        <p className="mt-4">予約したいMy Chariを選ぼう！</p>
         {/* 📍 Googleマップを表示 */}
         <div className="mt-6 w-80 h-60 border flex items-center justify-center">
           <GoogleMapComponent bikes={bikes} onMarkerClick={handleMarkerClick} />
         </div>
-
-        <p className="mt-4">予約したいMy Chariを選ぼう！</p>
-
+        <br />
         {/* 🚲 自転車選択前のメッセージ */}
         {!selectedBike && <p className="mt-4">自転車を選択してください</p>}
 
         {/* 🚲 自転車選択後の詳細表示 */}
         {selectedBike && (
           <div className="flex flex-col mt-2 items-center">
-            <p className="text-lg font-semibold text-center">自転車情報</p>
+            <p className="text-21xl font-semibold text-center">
+              この自転車を予約しますか？
+            </p>
             <div className="p-4 border rounded-md mt-2 w-80">
               <p>🚲 名前: {selectedBike.name}</p>
               <p>💰 料金: {selectedBike.price}円/時間</p>
@@ -88,6 +90,7 @@ export default function BorrowPage() {
               },
             }}
           >
+            <br />
             <Button>予約する</Button>
           </Link>
         )}

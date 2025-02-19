@@ -65,7 +65,7 @@ export default function Login() {
           placeholder="メール"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 rounded-md w-full"
+          className="border p-2 rounded-md w-full text-black"
           required
         />
         <input
@@ -73,7 +73,7 @@ export default function Login() {
           placeholder="パスワード"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 rounded-md w-full"
+          className="border p-2 rounded-md w-full text-black"
           required
         />
 
