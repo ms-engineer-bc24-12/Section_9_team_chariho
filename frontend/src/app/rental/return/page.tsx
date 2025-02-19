@@ -1,22 +1,15 @@
 //src/app/rental/return/page.tsx
 //②-③　返すページ(画像アップロード)
 //画像アップロード・決済
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useLocation } from '@/hooks/useLocation';
-import Map from '@/app/components/Map';
-//import dynamic from 'next/dynamic';
+import GoogleMapComponent from '@/app/components/GoogleMap';
 import Button from '@/app/components/Button';
 import CameraUploader from '@/app/components/CameraUploader';
 
-// const ImageUploader = dynamic(() => import('@/app/components/ImageUploader'), {
-//   ssr: false,
-// });
-
-// 仮の保管場所 (Googleマップに表示)
-//const storageLocation = { lat: 35.9285, lng: 139.57658 }; //返却不可
+// 仮の保管場所
 const storageLocation = { lat: 35.928339, lng: 139.5765827 }; //返却可能
 
 // 返却可能な誤差範囲（±10m ≒ 0.00009度）
@@ -88,14 +81,15 @@ export default function ReturnPage() {
       {/* Googleマップエリア */}
       <div className="mt-4 w-full flex justify-center">
         <div className="w-4/5 h-[300px] rounded-lg border overflow-hidden">
-          <Map
+          <GoogleMapComponent
             center={storageLocation}
+            zoom={15}
             markers={[
-              { id: 1, position: storageLocation, label: '🚲' }, // 保管場所
-              userLocation
-                ? { id: 2, position: userLocation, label: '📍' } // ユーザー現在地
-                : null,
-            ].filter((marker) => marker !== null)}
+              { id: 1, position: storageLocation }, // 保管場所
+              ...(userLocation
+                ? [{ id: 2, position: userLocation }] // ユーザー現在地
+                : []),
+            ]}
           />
         </div>
       </div>
@@ -105,7 +99,6 @@ export default function ReturnPage() {
         onPhotoSelect={(file) => {
           console.log('選択した画像:', file);
           setSelectedFile(file);
-          //ここで将来的に Firebase へアップロードする処理を追加
           setIsUploaded(true); // 仮のアップロード成功フラグ
         }}
       />
