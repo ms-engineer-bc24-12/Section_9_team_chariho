@@ -1,4 +1,3 @@
-
 // src/app/components/GoogleMap.tsx
 'use client';
 
@@ -96,4 +95,3 @@ const GoogleMapComponent: React.FC<GoogleMapProps> = ({
 };
 
 export default GoogleMapComponent;
-

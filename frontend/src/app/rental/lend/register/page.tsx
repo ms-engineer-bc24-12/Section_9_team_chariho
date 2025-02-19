@@ -12,7 +12,7 @@ import Button from '@/app/components/Button';
 import { useLocation } from '@/hooks/useLocation';
 
 export default function RegisterBikePage() {
-  const { userLocation, error, getLocation } = useLocation(); // getLocationを使用
+  const { userLocation, error } = useLocation(); // getLocationを使用
   const [bikeName, setBikeName] = useState('');
   const [price, setPrice] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -59,16 +59,12 @@ export default function RegisterBikePage() {
     setIsRegistered(true);
   };
 
-  // 位置情報を再取得する処理
-  const handleGetLocation = () => {
-    getLocation(); // 位置情報を再取得
-  };
-
   return (
     <div className="flex flex-col items-center justify-between min-h-screen px-4">
       <div className="flex flex-col items-center justify-center flex-grow w-full max-w-lg">
-        <p className="text-5xl font-bold mb-4">📑My Chari 登録</p>
-
+        <p className="text-4xl font-bold mb-4">📑My Chari 登録</p>
+        <br />
+        <br />
         {isRegistered ? (
           <div className="p-6 max-w-md text-center border rounded-md shadow-md bg-white">
             <p className="text-lg font-semibold">登録しました！</p>
@@ -89,7 +85,7 @@ export default function RegisterBikePage() {
                 type="text"
                 value={bikeName}
                 onChange={(e) => setBikeName(e.target.value)}
-                className="w-full p-2 border rounded-md"
+                className="w-full p-2 border rounded-md text-black"
                 placeholder="例: クロスバイク"
               />
             </label>
@@ -101,7 +97,7 @@ export default function RegisterBikePage() {
                 type="number"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full p-2 border rounded-md"
+                className="w-full p-2 border rounded-md text-black"
                 placeholder="例: 100"
               />
             </label>
@@ -118,7 +114,7 @@ export default function RegisterBikePage() {
                   endDate={endDate}
                   dateFormat="yyyy/MM/dd"
                   placeholderText="開始日"
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border rounded-md text-black"
                 />
                 <span className="self-center">〜</span>
                 <DatePicker
@@ -130,7 +126,7 @@ export default function RegisterBikePage() {
                   minDate={startDate || new Date()}
                   dateFormat="yyyy/MM/dd"
                   placeholderText="終了日"
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border rounded-md text-black"
                 />
               </div>
             </label>
@@ -178,17 +174,8 @@ export default function RegisterBikePage() {
               </div>
             </label>
 
-
-            {/* 位置情報を再取得ボタン */}
-            <button
-              onClick={handleGetLocation}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
-              位置情報を再取得
-            </button>
-
-            <div className="flex justify-center mt-6">
-
+            {/* 登録ボタン */}
+            <div className="flex justify-center">
               <Button
                 onClick={handleRegister}
                 className="border p-4 rounded-md w-60 text-center"

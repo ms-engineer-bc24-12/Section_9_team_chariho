@@ -9,14 +9,14 @@ export default function Footer() {
         href="/rental"
         className="w-1/2 text-center py-2 hover:text-orange-800 rounded-l-lg border-r border-[#114431]"
       >
-        <span className="text-4xl">🚲</span> {/* 自転車の絵文字 */}
+        <span className="text-4xl">🏠</span> {/* 自転車の絵文字 */}
         <span className="mt-2">Home</span> {/* Homeテキスト */}
       </Link>
       <Link
         href="/mypage"
         className="w-1/2 text-center py-2 hover:text-orange-800 rounded-full"
       >
-        🔔Mypage
+        👤Mypage
       </Link>
     </footer>
   );

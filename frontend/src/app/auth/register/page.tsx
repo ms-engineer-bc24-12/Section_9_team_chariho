@@ -121,7 +121,7 @@ export default function Register() {
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               placeholder="姓を入力して下さい"
-              className="border p-2 rounded-md w-full"
+              className="border p-2 rounded-md w-full text-black"
               required
             />
           </div>
@@ -132,7 +132,7 @@ export default function Register() {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder="名を入力して下さい"
-              className="border p-2 rounded-md w-full"
+              className="border p-2 rounded-md w-full text-black"
               required
             />
           </div>
@@ -144,7 +144,7 @@ export default function Register() {
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           placeholder="住所を入力してください"
-          className="border p-2 rounded-md w-full"
+          className="border p-2 rounded-md w-full text-black"
           required
         />
 
@@ -154,8 +154,8 @@ export default function Register() {
           value={phoneNumber}
           onChange={handlePhoneNumberChange}
           placeholder="電話番号を入力してください"
-          className="border p-2 rounded-md w-full"
-          maxLength={15}
+          className="border p-2 rounded-md w-full text-black"
+          maxLength={11}
           required
         />
 
@@ -165,7 +165,7 @@ export default function Register() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="メールアドレスを入力してください"
-          className="border p-2 rounded-md w-full"
+          className="border p-2 rounded-md w-full text-black"
           required
         />
 
@@ -175,7 +175,7 @@ export default function Register() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="パスワードを入力してください"
-          className="border p-2 rounded-md w-full"
+          className="border p-2 rounded-md w-full text-black"
           required
         />
 
@@ -185,7 +185,7 @@ export default function Register() {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="もう一度パスワードを入力してください"
-          className="border p-2 rounded-md w-full"
+          className="border p-2 rounded-md w-full text-black"
           required
         />
 
@@ -207,8 +207,6 @@ export default function Register() {
           </label>
         </div>
         <Button type="submit">登録</Button>
-        <br />
-        <br />
         <br />
       </form>
     </div>

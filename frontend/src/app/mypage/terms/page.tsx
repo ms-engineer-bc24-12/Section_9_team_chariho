@@ -6,16 +6,15 @@ import Button from '@/app/components/Button';
 
 export default function TermsPage() {
   return (
-    <div className="flex flex-col items-center min-h-screen p-20">
-      <div className="flex flex-col items-center justify-center w-full">
-        <p className="text-2xl font-bold mb-6">利用規約</p>
+    <div className="flex flex-col items-center justify-between min-h-screen p-20 pt-16">
+      <div className="flex flex-col items-center justify-center">
+        <p className="text-2xl font-bold mt-6">利用規約</p>
+        <br />
         <TermsContent />
       </div>
-      <div className="mt-6">
-        <Link href="/mypage">
-          <Button>マイページへ戻る</Button>
-        </Link>
-      </div>
+      <Link href="/mypage">
+        <Button>マイページへ戻る</Button>
+      </Link>
     </div>
   );
 }
