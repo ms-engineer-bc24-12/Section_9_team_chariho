@@ -18,10 +18,13 @@ services:
       - postgres
     environment:
       - DATABASE_URL=postgresql://postgres:password@host.docker.internal:5432/mydatabase
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     volumes:
       - .:/app
+      - ./app/secrets:/app/secrets
     command:
       [
         "uvicorn",

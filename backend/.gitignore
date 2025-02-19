@@ -6,6 +6,9 @@ __pycache__/
 *.pyc
 *.pyo
 
+# Firebase認証情報
+secrets/
+
 # その他のPython関連キャッシュ
 *.pyd
 *.pdb

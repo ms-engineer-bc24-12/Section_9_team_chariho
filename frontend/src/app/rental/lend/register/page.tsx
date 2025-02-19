@@ -1,9 +1,9 @@
-//src/app/rental/register/page.tsx
+//src/app/rental/lend/register/page.tsx
 //②-②-①　自転車情報登録ページ　(画像/場所/金額/期間/鍵情報) →　完了アラート表示 (②-②がめんへ自動遷移)
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -18,18 +18,26 @@ export default function RegisterBikePage() {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [lockType, setLockType] = useState('ダイヤル式');
+
+  // 保管場所の状態
   const [storageLocation, setStorageLocation] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
+  const [locationStatus, setLocationStatus] = useState<'OK' | 'NG' | ''>(''); // 取得結果の表示
   const [isRegistered, setIsRegistered] = useState(false);
 
-  useEffect(() => {
+  // 位置情報を取得する処理
+  const handleGetLocation = () => {
     if (userLocation) {
       setStorageLocation(userLocation);
+      setLocationStatus('OK'); // 取得成功
+    } else {
+      setLocationStatus('NG'); // 取得失敗
     }
-  }, [userLocation]);
+  };
 
+  // 登録処理
   const handleRegister = () => {
     if (!bikeName || !price || !startDate || !endDate || !storageLocation) {
       alert('すべての項目を入力してください');
@@ -74,6 +82,7 @@ export default function RegisterBikePage() {
           </div>
         ) : (
           <div className="p-6 max-w-md w-full border rounded-md shadow-md bg-white">
+            {/* 自転車の名前入力 */}
             <label className="block mb-2">
               🚲 自転車の名前
               <input
@@ -85,6 +94,7 @@ export default function RegisterBikePage() {
               />
             </label>
 
+            {/* 料金の入力 */}
             <label className="block mb-2">
               💰 1時間あたりの料金（円）
               <input
@@ -96,6 +106,7 @@ export default function RegisterBikePage() {
               />
             </label>
 
+            {/* 貸出期間 */}
             <label className="block mb-2">
               📅 貸出可能期間
               <div className="flex gap-2">
@@ -124,6 +135,7 @@ export default function RegisterBikePage() {
               </div>
             </label>
 
+            {/* 鍵の種類 */}
             <label className="block mb-4">
               🔑 鍵タイプ
               <select
@@ -136,14 +148,36 @@ export default function RegisterBikePage() {
               </select>
             </label>
 
-            <p className="text-sm text-gray-600 mb-4">
-              🚲 保管場所（現在地）:{' '}
-              {storageLocation
-                ? `緯度 ${storageLocation.lat}, 経度 ${storageLocation.lng}`
-                : '取得中...'}
-            </p>
+            {/* 📌 位置情報エラーがある場合、画面に表示 */}
+            {error && <p className="text-red-500">{error}</p>}
 
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {/* 現在地取得 */}
+            <label className="block mb-4">
+              🚲 保管場所（現在地）
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleGetLocation}
+                  className="border p-2 rounded-md w-40 text-center"
+                >
+                  位置情報 登録
+                </button>
+                {locationStatus && (
+                  <span
+                    className={
+                      locationStatus === 'OK'
+                        ? 'text-green-500'
+                        : 'text-red-500'
+                    }
+                  >
+                    {locationStatus === 'OK'
+                      ? 'OK (取得成功)'
+                      : 'NG (取得失敗)'}
+                  </span>
+                )}
+              </div>
+            </label>
+
 
             {/* 位置情報を再取得ボタン */}
             <button
@@ -154,6 +188,7 @@ export default function RegisterBikePage() {
             </button>
 
             <div className="flex justify-center mt-6">
+
               <Button
                 onClick={handleRegister}
                 className="border p-4 rounded-md w-60 text-center"

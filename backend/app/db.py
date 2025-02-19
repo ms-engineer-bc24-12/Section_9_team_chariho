@@ -8,10 +8,11 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+
 # テーブルを作成する関数
 def init_db():
-    from app.models import User  # インポートをここで行い循環参照を防ぐ
     Base.metadata.create_all(bind=engine)
+
 
 # データベースのセッションを取得する関数を追加
 def get_db():

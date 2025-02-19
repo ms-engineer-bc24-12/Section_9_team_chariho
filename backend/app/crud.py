@@ -1,7 +1,8 @@
-#データの操作
+# データの操作
 
 from sqlalchemy.orm import Session
 from app import models
+
 
 # ユーザーを作成する関数
 def create_user(db: Session, name: str, email: str):
@@ -10,6 +11,7 @@ def create_user(db: Session, name: str, email: str):
     db.commit()
     db.refresh(db_user)
     return db_user
+
 
 # ユーザーを取得する関数
 def get_user(db: Session, user_id: int):
