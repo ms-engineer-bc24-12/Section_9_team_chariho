@@ -2,7 +2,8 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
-#新規ユーザー作成用のスキーマ
+
+# 新規ユーザー作成用のスキーマ
 class UserCreate(BaseModel):
     firebase_uid: str
     first_name: Optional[str]
@@ -13,6 +14,7 @@ class UserCreate(BaseModel):
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
-#ユーザー情報を取得する為のスキーマ
+
+# ユーザー情報を取得する為のスキーマ
 class UserResponse(UserCreate):
     id: int

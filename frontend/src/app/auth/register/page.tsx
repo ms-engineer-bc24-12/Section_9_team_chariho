@@ -149,23 +149,15 @@ export default function Register() {
         />
 
         <label className="text-sm font-semibold">電話番号</label>
-        <div className="flex gap-2">
-          <select className="border p-2 rounded-md w-1/4" required>
-            <option value="+81">+81 (日本)</option>
-            <option value="+1">+1 (アメリカ)</option>
-            <option value="+44">+44 (イギリス)</option>
-            <option value="+49">+49 (ドイツ)</option>
-          </select>
-          <input
-            type="text"
-            value={phoneNumber}
-            onChange={handlePhoneNumberChange}
-            className="border p-2 rounded-md w-3/4"
-            maxLength={15}
-            required
-            placeholder="電話番号を入力してください"
-          />
-        </div>
+        <input
+          type="text"
+          value={phoneNumber}
+          onChange={handlePhoneNumberChange}
+          placeholder="電話番号を入力してください"
+          className="border p-2 rounded-md w-full"
+          maxLength={15}
+          required
+        />
 
         <label className="text-sm font-semibold">メールアドレス</label>
         <input

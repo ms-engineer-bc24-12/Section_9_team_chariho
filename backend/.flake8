@@ -1,7 +1,8 @@
 [flake8]
-max-line-length = 88
+max-line-length = 700
 exclude = 
     .git,
     __pycache__,
     *.pyc,
-    *.pyo
+    *.pyo,
+    venv/

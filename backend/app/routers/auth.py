@@ -1,4 +1,4 @@
-#既存ユーザーログイン認証(POST)
+# 既存ユーザーログイン認証(POST)
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.utils.firebase_auth import verify_firebase_token
@@ -9,8 +9,10 @@ from pydantic import BaseModel
 
 router = APIRouter()
 
+
 class LoginRequest(BaseModel):
     id_token: str
+
 
 @router.post("/login", response_model=UserResponse)
 def login(request: LoginRequest, db: Session = Depends(get_db)):

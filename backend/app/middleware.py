@@ -1,5 +1,6 @@
 from fastapi.middleware.cors import CORSMiddleware
 
+
 def add_cors_middleware(app):
     """CORSミドルウェアをアプリケーションに追加する"""
     app.add_middleware(
