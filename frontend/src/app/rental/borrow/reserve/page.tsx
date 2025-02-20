@@ -1,44 +1,55 @@
 //src/app/rental/borrow/reserve/page.tsx
 //②-①-①予約内容入力ページ(予約日時選択)
+'use client';
 
-export default function ReservePage() {
+import { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import Button from '@/app/components/Button';
+
+export default function ReserveConfirmPage() {
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen">
-      <div className="flex flex-col items-center justify-center flex-grow">
-        <p className="text-2xl font-bold">
-          ヘッダーの右上にアカウント設定を追加
-        </p>
-        <p className="text-2xl font-bold">予約フォーム</p>
+    <div className="flex flex-col items-center justify-between min-h-screen p-20 pt-16">
+      <div className="flex flex-col items-center justify-center">
+        <p className="text-2xl font-bold mt-6">🗓️ 予約詳細</p>
+        <br />
+        <form className="p-6 max-w-md text-center border rounded-md shadow-md bg-white">
+          <p className="text-lg font-semibold mt-4">日時を指定</p>
 
-        <p className="text-lg font-semibold mt-6">予約日時</p>
-        <div className="flex flex-col gap-2 mt-4">
-          <p className="border p-4 rounded-md w-60">📅 予約開始日</p>
-          <p className="border p-4 rounded-md w-60">📅 終了予定日</p>
-        </div>
+          <div className="flex flex-col gap-4 mt-6">
+            <div>
+              <label className="block text-left font-semibold">
+                📅 予約開始日時
+              </label>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                showTimeSelect
+                dateFormat="yyyy/MM/dd HH:mm"
+                className="w-full border p-2 rounded-md mt-1"
+              />
+            </div>
 
-        <p className="text-lg font-semibold mt-6">決済方法</p>
-        <div className="flex flex-col gap-2 mt-4">
-          <p className="border p-4 rounded-md w-60">⭕ PayPay</p>
-          <p className="border p-4 rounded-md w-60">⭕ 電子マネー</p>
-          <p className="border p-4 rounded-md w-60">⭕ クレカ</p>
-        </div>
-
-        <div className="mt-6">
-          <p className="border p-4 rounded-md w-60 text-center">
-            入力内容を確認
-          </p>
-        </div>
-      </div>
-
-      <div className="w-full">
-        <div className="flex justify-around bg-gray-100 p-4">
-          <p>🏠 ホーム</p>
-          <p>👤 マイページ</p>
-        </div>
+            <div>
+              <label className="block text-left font-semibold">
+                📅 予約終了予定
+              </label>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                showTimeSelect
+                dateFormat="yyyy/MM/dd HH:mm"
+                className="w-full border p-2 rounded-md mt-1"
+              />
+            </div>
+          </div>
+        </form>
+        <div className="mt-16"></div>
+        <Button>決済へ進む</Button>
       </div>
     </div>
   );
 }
-
-//ページ確認
-//http://localhost:3000/rental/borrow/reserve

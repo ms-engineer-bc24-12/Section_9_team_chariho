@@ -53,7 +53,7 @@ export default function LendPage() {
                 className="flex items-center justify-between border p-4 rounded-md w-80"
               >
                 <span>
-                  {bike.name} (価格：{bike.price}円)
+                  {bike.name} ({bike.price}円/時間)
                 </span>
                 <button
                   onClick={() => handleDelete(bike.id)}
