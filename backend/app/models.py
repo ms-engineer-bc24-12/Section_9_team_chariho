@@ -38,7 +38,9 @@ class User(Base):
 
     # NOTE:ユーザーと予約の紐づけ追加
     # ユーザーと予約のリレーション
-    reservations = relationship("Reservation", back_populates="user", cascade="all, delete-orphan")
+    reservations = relationship(
+        "Reservation", back_populates="user", cascade="all, delete-orphan"
+    )
 
 
 class Bicycle(Base):
@@ -67,7 +69,6 @@ class Bicycle(Base):
     # NOTE:自転車と紐づけ追加
     # 自転車と予約のリレーション
     reservations = relationship("Reservation", back_populates="bicycle")
-    
     # 制約（CHECK 制約を SQLAlchemy で追加）
     __table_args__ = (
         CheckConstraint(
@@ -81,11 +82,17 @@ class Reservation(Base):
     __tablename__ = "reservations"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    bicycle_id = Column(Integer, ForeignKey("bicycles.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    bicycle_id = Column(
+        Integer, ForeignKey("bicycles.id", ondelete="CASCADE"), nullable=False
+    )
     hours = Column(Integer, nullable=False)
     amount = Column(DECIMAL(10, 2), nullable=False)  # 金額
-    status = Column(String(50), default="pending", nullable=False)  # 'pending' or 'paid'
+    status = Column(
+        String(50), default="pending", nullable=False
+    )  # 'pending' or 'paid'
     checkout_session_id = Column(String, unique=True, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
 

@@ -5,11 +5,11 @@ import stripe
 from app.routers import users  # users.py ルーターをインポート
 from app.routers import auth  # auth.py をインポート
 from app.routers import bicycles  # bicycles.pyをインポート
+from app.routers import webhook  # webhook.py をインポート
+from app.routers import checkout  # checkout.py をインポート
 from contextlib import asynccontextmanager
 from app.db import init_db
 from app.middleware import add_cors_middleware
-
-stripe.api_key = "sk_test_51Qpl1SJzpJ9UCOiVkKPGfNqfPkzMQsHYN8x2XKFpAvk4gpj2DyMo6shH6fD7LuKdKYW4ynl2eyPbGAMZzKOHh4Fb00yeVnWvpv"
 
 
 app = FastAPI()
@@ -17,7 +17,8 @@ app = FastAPI()
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(bicycles.router)
-
+app.include_router(webhook.router)
+app.include_router(checkout.router)
 add_cors_middleware(app)
 
 # PostgreSQLへの接続設定

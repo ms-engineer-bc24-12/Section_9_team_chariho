@@ -30,3 +30,6 @@ secrets/
 *.egg-info/
 dist/
 build/
+
+# macOSの不要ファイル
+.DS_Store
