@@ -10,7 +10,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
 import Button from '@/app/components/Button';
 import { useLocation } from '@/hooks/useLocation';
-import CameraUploader from '@/app/components/CameraUploader';
+import CameraToBase64 from '@/app/components/CameraToBase64';
+//import CameraUploader from '@/app/components/CameraUploader'; //firebaseストレージの実装が完了した場合はこちらを採用
 
 export default function RegisterBikePage() {
   const { userLocation, error, getLocation } = useLocation();
@@ -27,8 +28,9 @@ export default function RegisterBikePage() {
   const [isRegistered, setIsRegistered] = useState(false);
 
   // 画像アップロード関連の状態管理
-  const [selectedFile, setSelectedFile] = useState<File | null>(null); // 撮影した画像のファイル
-  const [isUploaded, setIsUploaded] = useState<boolean>(false); // 画像がアップロードされたかどうか
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  //const [selectedFile, setSelectedFile] = useState<File | null>(null); // 撮影した画像のファイル(TODO:firebase適用)
+  //const [isUploaded, setIsUploaded] = useState<boolean>(false); // 画像がアップロードされたかどうか(TODO:firebase適用)
 
   // 初めて位置情報を取得する
   const handleGetLocation = () => {
@@ -59,7 +61,8 @@ export default function RegisterBikePage() {
       !startDate ||
       !endDate ||
       !storageLocation ||
-      !selectedFile
+      !capturedImage
+      //  !selectedFile //TODO:firebase適用
     ) {
       alert('すべての項目を入力してください（写真も必須です）');
       return;
@@ -72,7 +75,7 @@ export default function RegisterBikePage() {
       rentalPeriod: `${format(startDate, 'yyyy/MM/dd')} 〜 ${format(endDate, 'yyyy/MM/dd')}`,
       lockType,
       location: storageLocation,
-      photo: URL.createObjectURL(selectedFile), //TODO:ローカルストレージ保存しない場合はコメントアウト
+      photo: capturedImage, // Base64 の画像を保存
     };
 
     //TODO:ローカルストレージへの保存をしない場合はコメントアウト（Firebase Storageに移行予定）
@@ -192,19 +195,11 @@ export default function RegisterBikePage() {
               </div>
             </label>
 
-            {/* 画像アップロード */}
-            <div className="mt-6">
-              <CameraUploader
-                onPhotoSelect={(file) => {
-                  setSelectedFile(file);
-                  setIsUploaded(true);
-                }}
-                description="保管場所で貸出自転車を撮影"
-              />
-            </div>
+            {/* 画像撮影（Base64 & ローカルストレージ保存対応） */}
+            <CameraToBase64 onCapture={(base64) => setCapturedImage(base64)} />
 
             {/* 登録ボタン（画像がアップロードされていないと表示しない） */}
-            {selectedFile && isUploaded && (
+            {capturedImage && (
               <div className="flex justify-center mt-4">
                 <Button onClick={handleRegister}>登録</Button>
               </div>

@@ -1,5 +1,4 @@
 //src/app/components/CameraUploader.tsx
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -9,7 +8,7 @@ import Image from 'next/image';
 interface CameraUploaderProps {
   onPhotoSelect: (file: File) => void;
   onCancel?: () => void;
-  description?: string; // 📌 説明用のテキスト
+  description?: string; // 説明用のテキスト
 }
 
 export default function CameraUploader({
@@ -19,10 +18,10 @@ export default function CameraUploader({
 }: CameraUploaderProps) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isConfirming, setIsConfirming] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false); // 📌 登録完了後に画像を表示するための状態
-  const [showConfirmation, setShowConfirmation] = useState(false); // 📌 画像アップロード成功時に表示
+  const [isRegistered, setIsRegistered] = useState(false); // 登録完了後に画像を表示するための状態
+  const [showConfirmation, setShowConfirmation] = useState(false); // 画像アップロード成功時に表示
 
-  // ✅ 修正: `showConfirmation` はアップロード完了後にのみ true にする
+  // 修正: `showConfirmation` はアップロード完了後にのみ true にする
   useEffect(() => {
     if (showConfirmation) {
       console.log('画像のアップロードが完了しました！');
@@ -56,18 +55,18 @@ export default function CameraUploader({
     }
   };
 
-  // ✅ 修正: 画像を登録した後に `showConfirmation` を true にする
+  // 修正: 画像を登録した後に `showConfirmation` を true にする
   const handleRegister = () => {
     if (selectedImage) {
       console.log('画像データ送信:', selectedImage);
       onPhotoSelect(selectedImage);
       setIsConfirming(false);
       setIsRegistered(true);
-      setShowConfirmation(true); // 📌 ここでアップロード完了フラグを true にする！
+      setShowConfirmation(true); // ここでアップロード完了フラグを true にする
     }
   };
 
-  // 📌 撮影した写真を登録後、画像を表示
+  // 撮影した写真を登録後、画像を表示
   if (isRegistered && selectedImage) {
     return (
       <div className="flex flex-col items-center mt-6">
@@ -82,7 +81,7 @@ export default function CameraUploader({
     );
   }
 
-  // 📌 撮影後の確認画面
+  // 撮影後の確認画面
   if (isConfirming && selectedImage) {
     return (
       <div className="bg-lightBlue-200 p-4 rounded-lg w-full max-w-md mt-6 pb-16 overflow-auto">
@@ -119,10 +118,10 @@ export default function CameraUploader({
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-auto mt-6">
-      {/* 📌 説明文（色を返却ページと統一） */}
+      {/* 説明文（色を返却ページと統一） */}
       <p className="text-lg font-bold text-orange-600">{description}</p>
 
-      {/* 📸 撮影ボタン */}
+      {/* 撮影ボタン */}
       <Button onClick={handlePhotoSelect} className="mt-4">
         📸 撮影
       </Button>
