@@ -18,10 +18,10 @@ const LAT_LNG_THRESHOLD = 0.00009;
 export default function ReturnPage() {
   const { userLocation, error, getLocation } = useLocation();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isReturnable, setIsReturnable] = useState<boolean | null>(null); // 返却判定
-  const [isUploaded, setIsUploaded] = useState<boolean>(false); //画像アップロード完了フラグ（将来のFirebase対応）
+  const [isReturnable, setIsReturnable] = useState<boolean | null>(null);
+  const [isUploaded, setIsUploaded] = useState<boolean>(false);
+  const [updateMessage, setUpdateMessage] = useState<string | null>(null);
 
-  // 位置情報が返却範囲内にあるか判定する関数
   const isPointInRectangle = (point: { lat: number; lng: number }) => {
     return (
       Math.abs(point.lat - storageLocation.lat) <= LAT_LNG_THRESHOLD &&
@@ -29,84 +29,71 @@ export default function ReturnPage() {
     );
   };
 
-  // 返却可能か判定
   useEffect(() => {
     if (userLocation) {
       const isWithinRange = isPointInRectangle(userLocation);
-      console.log(isWithinRange ? '✅ 返却可能' : '❌ 返却不可');
       setIsReturnable(isWithinRange);
     }
   }, [userLocation]);
+
+  const handleLocationUpdate = () => {
+    setUpdateMessage('位置情報を更新しました！');
+    getLocation();
+  };
 
   return (
     <div className="flex flex-col items-center justify-between min-h-[140vh] pt-16">
       <div className="flex flex-col items-center flex-grow">
         <h2 className="text-4xl font-bold mt-6">🔔My Chari 返却</h2>
         <br />
-        <br />
-        {/* 位置情報（現在地取得）のエラーがあれば表示 */}
+
         {error && <p className="text-red-500">{error}</p>}
+
+        <div className="mt-4 flex flex-col items-center">
+          <p className="text-sm text-gray-600 text-center">
+            正しい位置に移動し、「現在地を更新」ボタンを押してください。
+          </p>
+          <br />
+          <Button onClick={handleLocationUpdate}>現在地を更新</Button>
+          {updateMessage && (
+            <p className="mt-2 text-sm text-green-600">{updateMessage}</p>
+          )}
+        </div>
 
         {/* 返却判定メッセージ */}
         {isReturnable !== null && (
           <p
-            className={`text-lg font-semibold ${isReturnable ? 'text-green-600' : 'text-red-600'}`}
+            className={`mt-4 text-lg font-semibold ${isReturnable ? 'text-green-600' : 'text-red-600'}`}
           >
             {isReturnable ? '✅ 返却できます' : '❌ 返却場所が違います'}
           </p>
         )}
-        <br />
-        {/* 位置情報が取得できている場合に表示 */}
-        {userLocation ? (
-          <div>
-            <p>
-              <strong>現在地📍:</strong> 緯度 {userLocation.lat}, 経度{' '}
-              {userLocation.lng}
-            </p>
-            <p>
-              <strong>保管場所🚲:</strong> 緯度 {storageLocation.lat}, 経度{' '}
-              {storageLocation.lng}
-            </p>
-          </div>
-        ) : (
-          <p>現在地を取得中...</p>
-        )}
-        <br />
-        {/* 常に「現在地を更新してください」の説明を表示 */}
-        <div className="mt-4 flex flex-col items-center">
-          <p className="mt-2 text-sm text-gray-600 text-center">
-            正しい位置に移動し、「現在地を更新」ボタンを押してください。
-          </p>
-          <br />
-          <Button onClick={getLocation}>📍 現在地を更新</Button>
-        </div>
 
         {/* Googleマップエリア */}
-        <div className="mt-4 w-full flex justify-center">
+        <div className="mt-6 w-full flex justify-center">
           <div className="w-4/5 h-[300px] rounded-lg border overflow-hidden">
             <GoogleMapComponent
               center={storageLocation}
               zoom={15}
               markers={[
-                { id: 1, position: storageLocation }, // 保管場所
-                ...(userLocation
-                  ? [{ id: 2, position: userLocation }] // ユーザー現在地
-                  : []),
+                { id: 1, position: storageLocation },
+                ...(userLocation ? [{ id: 2, position: userLocation }] : []),
               ]}
             />
           </div>
         </div>
 
         {/* 画像アップロードコンポーネント */}
-        <CameraUploader
-          onPhotoSelect={(file) => {
-            console.log('選択した画像:', file);
-            setSelectedFile(file);
-            setIsUploaded(true); // 仮のアップロード成功フラグ
-          }}
-        />
+        <div className="mt-6">
+          <CameraUploader
+            onPhotoSelect={(file) => {
+              setSelectedFile(file);
+              setIsUploaded(true);
+            }}
+          />
+        </div>
 
-        {/* 返却ボタン(返却可能なときだけ表示） */}
+        {/* 返却ボタン */}
         {isReturnable && selectedFile && isUploaded && (
           <div className="mt-6">
             <Button>返却する</Button>
