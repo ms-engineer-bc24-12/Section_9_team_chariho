@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function Header() {
   return (
-    <header className="fixed w-full flex justify-between items-center px-8 py-4 shadow-md bg-[#81d4fa]">
+    <header className="fixed w-full flex justify-between items-center px-8 py-4 shadow-md bg-[#81d4fa] z-20">
       {/* 左側: アプリ名 */}
       <Link
         href="/"

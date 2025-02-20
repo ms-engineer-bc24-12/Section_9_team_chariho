@@ -70,8 +70,8 @@ export default function ReturnPage() {
         )}
 
         {/* Googleマップエリア */}
-        <div className="mt-6 w-full flex justify-center">
-          <div className="w-4/5 h-[300px] rounded-lg border overflow-hidden">
+        <div className="relative mt-6 w-full flex justify-center">
+          <div className="w-4/5 h-[300px] rounded-lg border overflow-hidden z-0">
             <GoogleMapComponent
               center={storageLocation}
               zoom={15}
