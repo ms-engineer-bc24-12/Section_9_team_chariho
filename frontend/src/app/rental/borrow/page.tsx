@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import GoogleMapComponent from '../../components/GoogleMap';
 import Link from 'next/link';
+import Image from 'next/image';
 import Button from '@/app/components/Button';
 
 type Bike = {
@@ -13,6 +14,7 @@ type Bike = {
   rentalPeriod: string;
   lockType: string;
   location: { lat: number; lng: number };
+  photo?: string;
 };
 
 export default function BorrowPage() {
@@ -20,57 +22,89 @@ export default function BorrowPage() {
   const [selectedBike, setSelectedBike] = useState<Bike | null>(null);
   const [isSelected, setIsSelected] = useState(false);
 
-  // 🚲 ローカルストレージから貸出可能な自転車リストを取得
+  // ローカルストレージから貸出可能な自転車リストを取得
   useEffect(() => {
     const storedBikes = JSON.parse(localStorage.getItem('bikes') || '[]');
     setBikes(storedBikes);
   }, []);
 
-  // 🏷 Googleマップのマーカークリック時に自転車を選択
+  // Googleマップのマーカークリック時に自転車を選択
   const handleMarkerClick = (bike: Bike) => {
     setSelectedBike(bike);
-    setIsSelected(false); // チェックボックスをリセット
+    setIsSelected(false);
   };
 
-  // ✅ チェックボックスの変更を処理
+  // チェックボックスの変更を処理
   const handleCheckboxChange = () => {
     setIsSelected(!isSelected);
   };
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-[140vh] pt-16">
+    <div className="flex flex-col items-center justify-between  min-h-screen pt-16 pb-20">
       <div className="flex flex-col items-center flex-grow">
         <p className="text-4xl font-bold mt-6">🔎My Chari 予約</p>
         <br />
-        <br />
         <p className="mt-4">予約したいMy Chariを選ぼう！</p>
-        {/* 📍 Googleマップを表示 */}
+
+        {/* Googleマップを表示 */}
         <div className="mt-6 w-80 h-60 border flex items-center justify-center">
           <GoogleMapComponent bikes={bikes} onMarkerClick={handleMarkerClick} />
         </div>
         <br />
-        {/* 🚲 自転車選択前のメッセージ */}
+
+        {/* 自転車選択前のメッセージ */}
         {!selectedBike && <p className="mt-4">自転車を選択してください</p>}
 
-        {/* 🚲 自転車選択後の詳細表示 */}
+        {/* 自転車選択後の詳細表示 */}
         {selectedBike && (
           <div className="flex flex-col mt-2 items-center">
             <p className="text-21xl font-semibold text-center">
               この自転車を予約しますか？
             </p>
-            <div className="p-4 border rounded-md mt-2 w-80">
-              <p>🚲 名前: {selectedBike.name}</p>
-              <p>💰 料金: {selectedBike.price}円/時間</p>
-              <p>📅 期間: {selectedBike.rentalPeriod}</p>
-              <p>🔑 鍵タイプ: {selectedBike.lockType}</p>
-              <input
-                type="checkbox"
-                id={`bike-${selectedBike.id}`}
-                checked={isSelected}
-                onChange={handleCheckboxChange}
-              />
-              <label htmlFor={`bike-${selectedBike.id}`} className="ml-2">
-                選択
+            <div className="p-4 border rounded-lg shadow-md mt-2 w-80 bg-white flex flex-col items-center">
+              {/* 📸 画像表示 */}
+              {selectedBike.photo && (
+                <Image
+                  src={selectedBike.photo}
+                  alt="選択された自転車"
+                  width={300}
+                  height={200}
+                  quality={50}
+                  className="w-full h-auto object-contain rounded-md mb-4"
+                />
+              )}
+
+              {/* 🚲 自転車情報 */}
+              <p className="text-lg font-semibold text-center text-gray-800">
+                🚲 {selectedBike.name}
+              </p>
+              <p className="text-lg font-bold text-orange-500">
+                💰 {selectedBike.price}円/時間
+              </p>
+
+              {/* 📅 貸出期間 (修正部分) */}
+              <div className="mt-2 w-full text-center">
+                <p className="text-lg font-bold text-orange-600">📅 貸出期間</p>
+                <p className="text-md bg-yellow-100 px-3 py-1 rounded-md shadow-md inline-block mt-1">
+                  {selectedBike.rentalPeriod}
+                </p>
+              </div>
+
+              {/* 🔑 鍵タイプ */}
+              <p className="text-md text-gray-700 mt-2">
+                🔑 <span className="font-bold">鍵タイプ:</span>{' '}
+                {selectedBike.lockType}
+              </p>
+
+              {/* ✅ チェックボックス */}
+              <label className="mt-2 flex items-center">
+                <input
+                  type="checkbox"
+                  id={`bike-${selectedBike.id}`}
+                  checked={isSelected}
+                  onChange={handleCheckboxChange}
+                />
+                <span className="ml-2 text-gray-700">この自転車を選択する</span>
               </label>
             </div>
           </div>

@@ -64,11 +64,9 @@ export default function LendPage() {
                 )}
 
                 {/* 自転車情報 */}
-                <p className="text-lg font-semibold text-center text-gray-800">
+                <p>
                   {bike.name} <br />
-                  <span className="text-orange-500 font-bold">
-                    価格：{bike.price}円
-                  </span>
+                  <span>{bike.price}円/時間</span>
                 </p>
 
                 {/* 削除ボタン */}
