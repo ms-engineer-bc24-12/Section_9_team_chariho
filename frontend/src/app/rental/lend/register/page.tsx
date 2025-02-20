@@ -10,24 +10,27 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
 import Button from '@/app/components/Button';
 import { useLocation } from '@/hooks/useLocation';
+import CameraUploader from '@/app/components/CameraUploader';
 
 export default function RegisterBikePage() {
-  const { userLocation, error } = useLocation(); // getLocationを使用
+  const { userLocation, error, getLocation } = useLocation();
   const [bikeName, setBikeName] = useState('');
   const [price, setPrice] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [lockType, setLockType] = useState('ダイヤル式');
-
-  // 保管場所の状態
   const [storageLocation, setStorageLocation] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
-  const [locationStatus, setLocationStatus] = useState<'OK' | 'NG' | ''>(''); // 取得結果の表示
+  const [locationStatus, setLocationStatus] = useState<'OK' | 'NG' | ''>('');
   const [isRegistered, setIsRegistered] = useState(false);
 
-  // 位置情報を取得する処理
+  // 画像アップロード関連の状態管理
+  const [selectedFile, setSelectedFile] = useState<File | null>(null); // 撮影した画像のファイル
+  const [isUploaded, setIsUploaded] = useState<boolean>(false); // 画像がアップロードされたかどうか
+
+  // 初めて位置情報を取得する
   const handleGetLocation = () => {
     if (userLocation) {
       setStorageLocation(userLocation);
@@ -37,10 +40,28 @@ export default function RegisterBikePage() {
     }
   };
 
-  // 登録処理
+  // 位置情報を再取得する
+  const handleRetryLocation = () => {
+    getLocation(); // 位置情報の更新
+    if (userLocation) {
+      setStorageLocation(userLocation);
+      setLocationStatus('OK'); // 取得成功
+    } else {
+      setLocationStatus('NG'); // 取得失敗
+    }
+  };
+
+  // 貸し出し自転車を登録する処理
   const handleRegister = () => {
-    if (!bikeName || !price || !startDate || !endDate || !storageLocation) {
-      alert('すべての項目を入力してください');
+    if (
+      !bikeName ||
+      !price ||
+      !startDate ||
+      !endDate ||
+      !storageLocation ||
+      !selectedFile
+    ) {
+      alert('すべての項目を入力してください（写真も必須です）');
       return;
     }
 
@@ -51,8 +72,10 @@ export default function RegisterBikePage() {
       rentalPeriod: `${format(startDate, 'yyyy/MM/dd')} 〜 ${format(endDate, 'yyyy/MM/dd')}`,
       lockType,
       location: storageLocation,
+      photo: URL.createObjectURL(selectedFile), //TODO:ローカルストレージ保存しない場合はコメントアウト
     };
 
+    //TODO:ローカルストレージへの保存をしない場合はコメントアウト（Firebase Storageに移行予定）
     const existingBikes = JSON.parse(localStorage.getItem('bikes') || '[]');
     localStorage.setItem('bikes', JSON.stringify([...existingBikes, newBike]));
 
@@ -60,11 +83,14 @@ export default function RegisterBikePage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen px-4">
+    <div className="flex flex-col items-center justify-between min-h-[160vh] pt-16">
       <div className="flex flex-col items-center justify-center flex-grow w-full max-w-lg">
-        <p className="text-4xl font-bold mb-4">📑My Chari 登録</p>
+        <p className="text-4xl font-bold mb-2">📑My Chari 登録</p>
         <br />
-        <br />
+
+        {/* 位置情報エラーがある場合、画面に表示 */}
+        {error && <p className="text-red-500">{error}</p>}
+
         {isRegistered ? (
           <div className="p-6 max-w-md text-center border rounded-md shadow-md bg-white">
             <p className="text-lg font-semibold">登録しました！</p>
@@ -144,20 +170,12 @@ export default function RegisterBikePage() {
               </select>
             </label>
 
-            {/* 📌 位置情報エラーがある場合、画面に表示 */}
-            {error && <p className="text-red-500">{error}</p>}
-
-            {/* 現在地取得 */}
+            {/* 位置情報取得 */}
             <label className="block mb-4">
-              🚲 保管場所（現在地）
+              🚲 保管場所（現在地）位置情報
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleGetLocation}
-                  className="border p-2 rounded-md w-40 text-center"
-                >
-                  位置情報 登録
-                </button>
+                <Button onClick={handleGetLocation}>登録</Button>
+                <Button onClick={handleRetryLocation}>再取得</Button>
                 {locationStatus && (
                   <span
                     className={
@@ -174,15 +192,23 @@ export default function RegisterBikePage() {
               </div>
             </label>
 
-            {/* 登録ボタン */}
-            <div className="flex justify-center">
-              <Button
-                onClick={handleRegister}
-                className="border p-4 rounded-md w-60 text-center"
-              >
-                登録
-              </Button>
+            {/* 画像アップロード */}
+            <div className="mt-6">
+              <CameraUploader
+                onPhotoSelect={(file) => {
+                  setSelectedFile(file);
+                  setIsUploaded(true);
+                }}
+                description="保管場所で貸出自転車を撮影"
+              />
             </div>
+
+            {/* 登録ボタン（画像がアップロードされていないと表示しない） */}
+            {selectedFile && isUploaded && (
+              <div className="flex justify-center mt-4">
+                <Button onClick={handleRegister}>登録</Button>
+              </div>
+            )}
           </div>
         )}
       </div>
