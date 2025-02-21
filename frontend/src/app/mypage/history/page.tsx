@@ -11,35 +11,13 @@ export default function HistoryPage() {
         <br />
         {/* 自転車を貸した場合 */}
         <div className="flex flex-col gap-2 mt-4 md-6">
-          <p className="text-lg font-semibold">貸した自転車</p>
+          <p className="text-2xl font-semibold text-center">売上金：180円</p>
+          <br />
           <div className="border p-4 rounded-md w-80">
             <p>📅 2025/01/10</p>
             <p>🚲 自転車:マウンテンバイク</p>
             <p>📍 場所:春日部市</p>
             <p>💰 料金:500円</p>
-          </div>
-          <div className="border p-4 rounded-md mt-2">
-            <p>📅 2025/01/15</p>
-            <p>🚲 自転車:マウンテンバイク</p>
-            <p>📍 場所:春日部市</p>
-            <p>💰 料金:300円</p>
-          </div>
-        </div>
-
-        {/* 自転車を借りた場合 */}
-        <div className="flex flex-col gap-2 mt-4">
-          <p className="text-lg font-semibold">借りた自転車</p>
-          <div className="border p-4 rounded-md w-80">
-            <p>📅 2025/02/01</p>
-            <p>🚲 自転車:電動アシスト</p>
-            <p>📍 場所:越生町</p>
-            <p>💰 料金:500円</p>
-          </div>
-          <div className="border p-4 rounded-md mt-2">
-            <p>📅 2025/02/05</p>
-            <p>🚲 自転車:ロードバイク</p>
-            <p>📍 場所:秩父市</p>
-            <p>💰 料金:800円</p>
           </div>
         </div>
         <div className="mt-6">
