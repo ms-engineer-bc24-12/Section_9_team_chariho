@@ -120,7 +120,7 @@ export default function BorrowPage() {
 
         {selectedBike && (
           <div className="flex flex-col mt-2 items-center">
-            <p className="text-2xl text-center">この自転車を予約しますか？</p>
+            <p className="text-21xl text-center">この自転車を予約しますか？</p>
             <div className="p-4 border rounded-lg shadow-md mt-2 w-80 bg-white flex flex-col items-center">
               {selectedBike.photo && (
                 <Image
