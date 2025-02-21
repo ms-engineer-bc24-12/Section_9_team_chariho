@@ -3,8 +3,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import GoogleMapComponent from '../../components/GoogleMap';
-import Link from 'next/link';
 import Image from 'next/image';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import Button from '@/app/components/Button';
 
 type Bike = {
@@ -21,6 +22,8 @@ export default function BorrowPage() {
   const [bikes, setBikes] = useState<Bike[]>([]);
   const [selectedBike, setSelectedBike] = useState<Bike | null>(null);
   const [isSelected, setIsSelected] = useState(false);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   // ローカルストレージから貸出可能な自転車リストを取得
   useEffect(() => {
@@ -40,7 +43,7 @@ export default function BorrowPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between  min-h-[160vh] pt-16 pb-20">
+    <div className="flex flex-col items-center justify-between  min-h-[170vh] pt-16 pb-20">
       <div className="flex flex-col items-center flex-grow">
         <p className="text-4xl font-bold mt-6">🔎My Chari 予約</p>
         <br />
@@ -102,30 +105,49 @@ export default function BorrowPage() {
             </div>
           </div>
         )}
-
-        {/* 予約ページへ遷移 */}
+        <br />
         {selectedBike && isSelected && (
-          <Link
-            href={{
-              pathname: '/rental/borrow/reserve',
-              query: {
-                bikeId: selectedBike.id.toString(),
-                bikeName: selectedBike.name,
-                price: selectedBike.price.toString(),
-                rentalPeriod: selectedBike.rentalPeriod,
-                lockType: selectedBike.lockType,
-                photo: selectedBike.photo,
-              },
-            }}
-          >
-            <br />
-            <Button>予約する</Button>
-          </Link>
+          <div>
+            <div className="p-4 max-w-lg w-md border rounded-lg shadow-md bg-white">
+              <p className="text-lg font-semibold text-center">日時を指定</p>
+              <div className="flex flex-col text-center gap-4 mt-4">
+                <div>
+                  <label className="block text-center">予約開始日時</label>
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    showTimeSelect
+                    dateFormat="yyyy/MM/dd HH:mm"
+                    className="w-full border p-2 rounded-md mt-1 text-black"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-center">予約終了日時</label>
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    showTimeSelect
+                    dateFormat="yyyy/MM/dd HH:mm"
+                    className="w-full border p-2 rounded-md mt-1 text-black"
+                  />
+                </div>
+              </div>
+            </div>
+            {/* 決済へ進むボタン（日時未入力時は無効化） */}
+            <div className="mt-6 flex justify-center">
+              <Button
+                className={`px-4 py-2 rounded-md ${
+                  !startDate || !endDate ? 'opacity-50 pointer-events-none' : ''
+                }`}
+              >
+                決済へ進む
+              </Button>
+            </div>
+          </div>
         )}
       </div>
+      <br />
     </div>
   );
 }
-
-//ページ確認
-//http://localhost:3000/rental/borrow
