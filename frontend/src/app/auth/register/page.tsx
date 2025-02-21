@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import Button from '@/app/components/Button';
 import TermsContent from '@/app/components/TermsContent';
 import { FirebaseError } from 'firebase/app';
+import Link from 'next/link';
 
 export default function Register() {
   const [lastName, setLastName] = useState('');
@@ -207,8 +208,14 @@ export default function Register() {
           </label>
         </div>
         <Button type="submit">登録</Button>
-        <br />
       </form>
+      {/* 新規登録ページへのリンク */}
+      <p className="mt-4 text-sm">
+        アカウントをお持ちの方は{' '}
+        <Link href="/auth/login" className="text-blue-500 underline">
+          ログイン
+        </Link>
+      </p>
     </div>
   );
 }

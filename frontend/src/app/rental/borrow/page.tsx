@@ -40,7 +40,7 @@ export default function BorrowPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between  min-h-screen pt-16 pb-20">
+    <div className="flex flex-col items-center justify-between  min-h-[160vh] pt-16 pb-20">
       <div className="flex flex-col items-center flex-grow">
         <p className="text-4xl font-bold mt-6">🔎My Chari 予約</p>
         <br />
@@ -58,9 +58,7 @@ export default function BorrowPage() {
         {/* 自転車選択後の詳細表示 */}
         {selectedBike && (
           <div className="flex flex-col mt-2 items-center">
-            <p className="text-21xl font-semibold text-center">
-              この自転車を予約しますか？
-            </p>
+            <p className="text-21xl text-center">この自転車を予約しますか？</p>
             <div className="p-4 border rounded-lg shadow-md mt-2 w-80 bg-white flex flex-col items-center">
               {/* 📸 画像表示 */}
               {selectedBike.photo && (
@@ -75,25 +73,20 @@ export default function BorrowPage() {
               )}
 
               {/* 🚲 自転車情報 */}
-              <p className="text-lg font-semibold text-center text-gray-800">
-                🚲 {selectedBike.name}
-              </p>
-              <p className="text-lg font-bold text-orange-500">
-                💰 {selectedBike.price}円/時間
-              </p>
+              <p className="font-bold">🚲 {selectedBike.name}</p>
+              <p className="mt-2">💰 {selectedBike.price}円/時間</p>
 
               {/* 📅 貸出期間 (修正部分) */}
               <div className="mt-2 w-full text-center">
-                <p className="text-lg font-bold text-orange-600">📅 貸出期間</p>
-                <p className="text-md bg-yellow-100 px-3 py-1 rounded-md shadow-md inline-block mt-1">
+                <p>📅 貸出期間</p>
+                <p className="bg-yellow-100 px-4 py-1 rounded-md shadow-md inline-block">
                   {selectedBike.rentalPeriod}
                 </p>
               </div>
 
               {/* 🔑 鍵タイプ */}
-              <p className="text-md text-gray-700 mt-2">
-                🔑 <span className="font-bold">鍵タイプ:</span>{' '}
-                {selectedBike.lockType}
+              <p className="mt-2">
+                🔑 <span>鍵タイプ:</span> {selectedBike.lockType}
               </p>
 
               {/* ✅ チェックボックス */}
@@ -104,7 +97,7 @@ export default function BorrowPage() {
                   checked={isSelected}
                   onChange={handleCheckboxChange}
                 />
-                <span className="ml-2 text-gray-700">この自転車を選択する</span>
+                <span className="ml-4">この自転車を選択する</span>
               </label>
             </div>
           </div>
@@ -121,6 +114,7 @@ export default function BorrowPage() {
                 price: selectedBike.price.toString(),
                 rentalPeriod: selectedBike.rentalPeriod,
                 lockType: selectedBike.lockType,
+                photo: selectedBike.photo,
               },
             }}
           >

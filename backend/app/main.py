@@ -4,7 +4,6 @@ from sqlalchemy.orm import sessionmaker
 import stripe
 from app.routers import users  # users.py ルーターをインポート
 from app.routers import auth  # auth.py をインポート
-from app.routers import bicycles  # bicycles.pyをインポート
 from app.routers import webhook  # webhook.py をインポート
 from app.routers import checkout  # checkout.py をインポート
 from contextlib import asynccontextmanager
@@ -16,7 +15,6 @@ app = FastAPI()
 
 app.include_router(auth.router)
 app.include_router(users.router)
-app.include_router(bicycles.router)
 app.include_router(webhook.router)
 app.include_router(checkout.router)
 add_cors_middleware(app)

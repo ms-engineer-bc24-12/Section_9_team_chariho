@@ -8,9 +8,10 @@ import { useLocation } from '@/hooks/useLocation';
 import GoogleMapComponent from '@/app/components/GoogleMap';
 import Button from '@/app/components/Button';
 import CameraUploader from '@/app/components/CameraUploader';
+import Link from 'next/link';
 
-// 仮の保管場所
-const storageLocation = { lat: 35.928339, lng: 139.5765827 }; //返却可能
+// 仮の現在地
+const storageLocation = { lat: 34.6947584, lng: 135.528448 }; //返却可能
 
 // 返却可能な誤差範囲（±10m ≒ 0.00009度）
 const LAT_LNG_THRESHOLD = 0.00009;
@@ -92,11 +93,13 @@ export default function ReturnPage() {
             }}
           />
         </div>
-
+        <br />
         {/* 返却ボタン */}
         {isReturnable && selectedFile && isUploaded && (
           <div className="mt-6">
-            <Button>返却する</Button>
+            <Link href="/rental/return/confirm">
+              <Button>返却する</Button>
+            </Link>
           </div>
         )}
       </div>
