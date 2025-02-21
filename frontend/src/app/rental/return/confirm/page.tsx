@@ -1,21 +1,35 @@
 //src/app/rental/return/confirm/pape.tsx
 //②-③-①自転車返却確認ページ (時間/金額/決済情報)　→ 完了アラート表示(②借りる/貸す/返す選択ページへ自動遷移？)
 import Button from '@/app/components/Button';
+import Link from 'next/link';
 
 export default function ReturnConfirmPage() {
   return (
-    <div className="flex flex-col items-center justify-between min-h-[170vh] pt-16">
+    <div className="flex flex-col items-center justify-between min-h-screen pt-16">
       <div className="flex flex-col items-center flex-grow">
-        <h2 className="text-4xl font-bold mt-6">返却フォーム</h2>
-
-        <div className="mt-4 w-full max-w-md">
-          <p className="border p-2 rounded-md w-full">利用日時: ○○/○○～○○/○○</p>
-          <p className="border p-2 rounded-md w-full">利用時間: ○○時間</p>
-          <p className="border p-2 rounded-md w-full">料金: ○○円</p>
-          <p className="border p-2 rounded-md w-full">写真の認証？</p>
-        </div>
+        <h2 className="text-2xl font-bold mt-6">最終確認</h2>
         <br />
-        <Button>完了する</Button>
+        {/* 注意事項を枠で囲む */}
+        <div className="border border-gray-300 rounded-lg p-4 bg-gray-100 max-w-md">
+          <p className="mb-2 text-center">ご利用ありがとうございました。</p>
+          <p className="mb-2 text-center">
+            下記内容を再度ご確認後、完了ボタンを押してください。
+          </p>
+          <br />
+          <ul className="list-disc list-inside text-left">
+            <li>🔒 鍵が施錠されているか確認してください。</li>
+            <li>
+              🔑 ロック式自転車の場合は、正しい保管場所に鍵を返却してください。
+            </li>
+            <li>
+              👤 ご利用明細についてはマイページの利用履歴をご確認ください。
+            </li>
+          </ul>
+        </div>
+        {/* ボタンは枠外 */}
+        <Link href="/mypage/history" className="mt-6">
+          <Button>完了する</Button>
+        </Link>
       </div>
     </div>
   );
