@@ -43,7 +43,7 @@ export default function ReturnPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-[170vh] pt-16">
+    <div className="flex flex-col items-center justify-between min-h-[200vh] pt-16">
       <div className="flex flex-col items-center flex-grow">
         <h2 className="text-4xl font-bold mt-6">🔔My Chari 返却</h2>
         <br />
