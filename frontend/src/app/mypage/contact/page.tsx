@@ -63,7 +63,7 @@ export default function ContactPage() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="p-12 max-w-md w-full border rounded-md shadow-md block font-semibold bg-white text-orange-600"
+            className="p-12 max-w-md w-full border rounded-md shadow-md block font-semibold bg-white"
           >
             <div className="mb-4">
               <label>名前</label>

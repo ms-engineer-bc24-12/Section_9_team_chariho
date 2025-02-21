@@ -98,7 +98,7 @@ export default function CameraUploader({
         </p>
         <div className="flex flex-col items-center justify-center gap-4">
           <Button onClick={handleRegister} className="mt-4">
-            登録する
+            はい
           </Button>
           <Button
             onClick={() => {
@@ -109,7 +109,7 @@ export default function CameraUploader({
             }}
             className="mb-10"
           >
-            キャンセル
+            いいえ
           </Button>
         </div>
       </div>
