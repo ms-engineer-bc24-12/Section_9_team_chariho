@@ -4,6 +4,8 @@
 import { useEffect, useState } from 'react';
 import Button from '../components/Button';
 import Image from 'next/image';
+import { auth } from '../../lib/firebase'; // Firebaseの初期化をインポート
+import { getIdToken } from 'firebase/auth'; // Firebase AuthのgetIdTokenメソッドをインポート
 
 interface CameraUploaderProps {
   onPhotoSelect: (file: File) => void;
@@ -55,14 +57,45 @@ export default function CameraUploader({
     }
   };
 
-  // 修正: 画像を登録した後に `showConfirmation` を true にする
-  const handleRegister = () => {
+  // Firebase tokenを取得する関数
+  const getFirebaseToken = async (): Promise<string> => {
+    const user = auth.currentUser; // Firebase Auth から現在のユーザーを取得
+    if (!user) {
+      throw new Error('ユーザーが認証されていません');
+    }
+    return await getIdToken(user); // FirebaseのIDトークンを取得
+  };
+
+  // 画像をアップロードし、Firebase StorageのURLを取得
+  const handleRegister = async () => {
     if (selectedImage) {
-      console.log('画像データ送信:', selectedImage);
-      onPhotoSelect(selectedImage);
-      setIsConfirming(false);
-      setIsRegistered(true);
-      setShowConfirmation(true); // ここでアップロード完了フラグを true にする
+      try {
+        const token = await getFirebaseToken(); // Firebase Auth から ID トークンを取得
+        const formData = new FormData();
+        formData.append('file', selectedImage);
+
+        // バックエンドのエンドポイントに画像を送信
+        const response = await fetch('http://localhost:8000/upload-image/', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('画像のアップロードに失敗しました');
+        }
+
+        const data = await response.json();
+        console.log('アップロード完了:', data.image_url);
+        onPhotoSelect(selectedImage); // 親コンポーネントに画像ファイルを渡す
+        setIsConfirming(false);
+        setIsRegistered(true);
+        setShowConfirmation(true); // ここでアップロード完了フラグを true にする
+      } catch (error) {
+        console.error('アップロードエラー:', error);
+      }
     }
   };
 
