@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import stripe
 from app.routers import users  # users.py ルーターをインポート
 from app.routers import auth  # auth.py をインポート
 from app.routers import webhook  # webhook.py をインポート
 from app.routers import checkout  # checkout.py をインポート
+from app.routers import bicycles  # bicycles.py をインポート
 from contextlib import asynccontextmanager
 from app.db import init_db
 from app.middleware import add_cors_middleware
@@ -17,6 +17,7 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(webhook.router)
 app.include_router(checkout.router)
+app.include_router(bicycles.router)
 add_cors_middleware(app)
 
 # PostgreSQLへの接続設定
