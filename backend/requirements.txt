@@ -61,3 +61,4 @@ alembic
 psycopg2
 stripe
 celery
+python-multipart
