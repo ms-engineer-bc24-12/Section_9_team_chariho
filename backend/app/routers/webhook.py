@@ -1,55 +1,68 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Request, Depends
 import stripe
 import os
-import psycopg2
 from dotenv import load_dotenv
+from app.db import get_db  # 🔥 psycopg2 ではなく get_db を使用
+from sqlalchemy.orm import Session
+from datetime import datetime, timezone
 
-# .env を読み込む
+# .env の環境変数を読み込む
 load_dotenv()
 
 router = APIRouter()
 
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
-DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 @router.post("/payments/stripe-webhook/")
-async def stripe_webhook(request: Request):
-    """Stripe Webhook エンドポイント"""
-    payload = await request.json()
-    event_type = payload.get("type")
-    event_data = payload.get("data", {}).get("object", {})
+async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
+    payload = await request.body()
+    sig_header = request.headers.get("stripe-signature")
 
-    print(f"📩 Webhook Payload: {payload}")
+    try:
+        # Stripe Webhook のリクエストを検証
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, os.getenv("STRIPE_WEBHOOK_SECRET")
+        )
 
-    if event_type == "checkout.session.completed":
-        metadata = event_data.get("metadata", {})  # 🔥 metadata を取得
-        bicycle_id = metadata.get("bicycle_id")
-        user_id = metadata.get("user_id")
+        # 支払いが完了した場合の処理
+        if event["type"] == "checkout.session.completed":
+            session = event["data"]["object"]
+            metadata = session.get("metadata", {})
 
-        if not bicycle_id or not user_id:
-            print("🚨 metadata に bicycle_id または user_id がない")
-            raise HTTPException(
-                status_code=400, detail="bicycle_id または user_id が metadata にない"
-            )
+            reservation_start = metadata.get("reservation_start")
 
-        # DB に支払い情報を保存
-        try:
-            conn = psycopg2.connect(DATABASE_URL)
-            cur = conn.cursor()
-            cur.execute(
-                "UPDATE reservations SET status = 'paid' WHERE user_id = %s AND bicycle_id = %s",
-                (int(user_id), int(bicycle_id)),
-            )
-            conn.commit()
-            cur.close()
-            conn.close()
-        except Exception as e:
-            print(f"❌ DB 更新エラー: {e}")
-            raise HTTPException(
-                status_code=500, detail="データベースの更新に失敗しました"
-            )
+            now = datetime.now(timezone.utc)
 
-        print("支払い成功 & DB 更新完了")
+            # 日時のフォーマットを検証
+            try:
+                reservation_start_dt = datetime.fromisoformat(
+                    reservation_start
+                ).replace(tzinfo=timezone.utc)
+            except ValueError:
+                return {
+                    "status": "failed",
+                    "error": "予約開始日時の形式が正しくありません。YYYY-MM-DDTHH:MM:SSZ の形式で指定してください。",
+                }, 400
 
-    return {"message": "Webhook received"}
+            # 過去の日時をブロック
+            if reservation_start_dt < now:
+                return {
+                    "status": "failed",
+                    "error": "過去の日時での予約はできません。",
+                }, 400
+
+            # ここでDBに予約情報を保存する（例）
+            # new_reservation = Reservation(...)
+            # db.add(new_reservation)
+            # db.commit()
+
+        return {"status": "success"}
+
+    except stripe.error.SignatureVerificationError:
+        return {
+            "status": "failed",
+            "error": "署名の検証に失敗しました。不正なリクエストです。",
+        }, 400
+    except Exception as e:
+        return {"status": "failed", "error": f"エラーが発生しました: {str(e)}"}, 400

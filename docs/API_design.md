@@ -18,39 +18,38 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
 
 ## **ユーザーモデル（データベース構造）**
 
-| 項目 | 型 | 説明 |
-| --- | --- | --- |
-| `user_id` | `UUID` | ユーザーの一意識別ID |
-| `name` | `string` | ユーザー名 |
-| `email` | `string` | メールアドレス（ログイン用） |
-| `phone_number` | `string` | 電話番号 |
-| `password` | `string` | ハッシュ化されたパスワード |
-| `created_at` | `datetime` | アカウント作成日時 |
-
+| 項目           | 型         | 説明                         |
+| -------------- | ---------- | ---------------------------- |
+| `user_id`      | `UUID`     | ユーザーの一意識別ID         |
+| `name`         | `string`   | ユーザー名                   |
+| `email`        | `string`   | メールアドレス（ログイン用） |
+| `phone_number` | `string`   | 電話番号                     |
+| `password`     | `string`   | ハッシュ化されたパスワード   |
+| `created_at`   | `datetime` | アカウント作成日時           |
 
 ---
 
 ## **エンドポイント一覧**
 
-| **カテゴリ** | **メソッド** | **エンドポイント** | **説明** |
-| --- | --- | --- | --- |
-| **ユーザー** | `POST` | `/users/register` | ユーザー登録 |
-|  | `GET` | `/users/{user_id}` | ユーザー情報取得 |
-| **自転車** | `POST` | `/bicycles` | 自転車登録 |
-|  | `GET` | `/bicycles` | 自転車一覧取得 |
-|  | `GET` | `/bicycles/{bicycle_id}` | 自転車詳細取得 |
-|  | `PUT` | `/bicycles/{bicycle_id}` | 自転車情報更新 |
-|  | `DELETE` | `/bicycles/{bicycle_id}` | 自転車削除 |
-| **予約** | `POST` | `/reservations` | 予約作成 |
-|  | `GET` | `/reservations/{reservation_id}` | 予約詳細取得 |
-|  | `PUT` | `/reservations/{reservation_id}/cancel` | 予約キャンセル |
-|  | `GET` | `/users/{user_id}/reservations` | ユーザーの予約一覧取得 |
-| **決済** | `POST` | `/payments` | 支払い処理 |
-|  | `GET` | `/payments/{payment_id}` | 支払い詳細取得 |
-| **レンタル履歴** | `GET` | `/rental_history/{user_id}` | ユーザーのレンタル履歴取得 |
-|  | `GET` | `/rental_history/{history_id}` | レンタル履歴詳細取得 |
-| **通知** | `GET` | `/notifications/{user_id}` | ユーザーの通知一覧取得 |
-|  | `PUT` | `/notifications/{notification_id}/read` | 通知を既読にする |
+| **カテゴリ**     | **メソッド** | **エンドポイント**                      | **説明**                   |
+| ---------------- | ------------ | --------------------------------------- | -------------------------- |
+| **ユーザー**     | `POST`       | `/users/register`                       | ユーザー登録               |
+|                  | `GET`        | `/users/{user_id}`                      | ユーザー情報取得           |
+| **自転車**       | `POST`       | `/bicycles`                             | 自転車登録                 |
+|                  | `GET`        | `/bicycles`                             | 自転車一覧取得             |
+|                  | `GET`        | `/bicycles/{bicycle_id}`                | 自転車詳細取得             |
+|                  | `PUT`        | `/bicycles/{bicycle_id}`                | 自転車情報更新             |
+|                  | `DELETE`     | `/bicycles/{bicycle_id}`                | 自転車削除                 |
+| **予約**         | `POST`       | `/reservations`                         | 予約作成                   |
+|                  | `GET`        | `/reservations/{reservation_id}`        | 予約詳細取得               |
+|                  | `PUT`        | `/reservations/{reservation_id}/cancel` | 予約キャンセル             |
+|                  | `GET`        | `/users/{user_id}/reservations`         | ユーザーの予約一覧取得     |
+| **決済**         | `POST`       | `/payments`                             | 支払い処理                 |
+|                  | `GET`        | `/payments/{payment_id}`                | 支払い詳細取得             |
+| **レンタル履歴** | `GET`        | `/rental_history/{user_id}`             | ユーザーのレンタル履歴取得 |
+|                  | `GET`        | `/rental_history/{history_id}`          | レンタル履歴詳細取得       |
+| **通知**         | `GET`        | `/notifications/{user_id}`              | ユーザーの通知一覧取得     |
+|                  | `PUT`        | `/notifications/{notification_id}/read` | 通知を既読にする           |
 
 ---
 
@@ -76,7 +75,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
     "last4": "1234"
   }
 }
-
 ```
 
 ### **レスポンス**
@@ -89,7 +87,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
   "email": "tanaka@example.com",
   "created_at": "2025-02-07T12:00:00Z"
 }
-
 ```
 
 ---
@@ -115,7 +112,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
   "created_at": "2025-02-07T12:00:00Z",
   "updated_at": "2025-02-07T12:30:00Z"
 }
-
 ```
 
 ---
@@ -129,7 +125,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
 ### **リクエスト**
 
 ```json
-
 {
   "owner_id": 1,
   "image_url": "https://example.com/bike1.jpg",
@@ -141,13 +136,11 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
     "time_slots": ["08:00-12:00", "14:00-18:00"]
   }
 }
-
 ```
 
 ### **レスポンス**
 
 ```json
-
 {
   "id": 1,
   "owner_id": 1,
@@ -157,7 +150,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
   "lock_type": "dial",
   "created_at": "2025-02-07T12:00:00Z"
 }
-
 ```
 
 ---
@@ -185,7 +177,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
     "rental_price_per_hour": 700
   }
 ]
-
 ```
 
 ---
@@ -209,7 +200,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
     "last4": "1234"
   }
 }
-
 ```
 
 ### **レスポンス**
@@ -224,7 +214,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
   "status": "pending",
   "created_at": "2025-02-07T12:10:00Z"
 }
-
 ```
 
 ---
@@ -236,13 +225,11 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
 ### **レスポンス**
 
 ```json
-
 {
   "id": 1,
   "status": "cancelled",
   "updated_at": "2025-02-07T12:30:00Z"
 }
-
 ```
 
 ---
@@ -262,13 +249,11 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
   "amount": 1000,
   "status": "pending"
 }
-
 ```
 
 ### **レスポンス**
 
 ```json
-
 {
   "id": 1,
   "user_id": 1,
@@ -277,7 +262,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
   "status": "completed",
   "created_at": "2025-02-07T12:20:00Z"
 }
-
 ```
 
 ---
@@ -291,7 +275,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
 ### **レスポンス**
 
 ```json
-
 [
   {
     "id": 1,
@@ -303,7 +286,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
     "created_at": "2025-02-07T12:40:00Z"
   }
 ]
-
 ```
 
 ---
@@ -317,7 +299,6 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
 ### **レスポンス**
 
 ```json
-
 [
   {
     "id": 1,
@@ -327,3 +308,4 @@ Charihoは、誰でも「借りる側」と「貸す側」両方の機能を利�
     "created_at": "2025-02-07T12:15:00Z"
   }
 ]
+```
