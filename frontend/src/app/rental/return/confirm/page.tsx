@@ -1,9 +1,19 @@
 //src/app/rental/return/confirm/pape.tsx
 //②-③-①自転車返却確認ページ (時間/金額/決済情報)　→ 完了アラート表示(②借りる/貸す/返す選択ページへ自動遷移？)
+'use client';
+import { useState } from 'react';
+import { sendTokenToBackend } from '@/app/components/NotificationHandler';
 import Button from '@/app/components/Button';
 import Link from 'next/link';
 
 export default function ReturnConfirmPage() {
+  const [isNotificationSent, setIsNotificationSent] = useState(false);
+
+  const handleComplete = async () => {
+    // 完了する処理
+    await sendTokenToBackend('自転車返却完了通知');
+    setIsNotificationSent(true);
+  };
   return (
     <div className="flex flex-col items-center justify-between min-h-screen pt-16">
       <div className="flex flex-col items-center flex-grow">
@@ -28,7 +38,8 @@ export default function ReturnConfirmPage() {
         </div>
         {/* ボタンは枠外 */}
         <Link href="/mypage/history" className="mt-6">
-          <Button>完了する</Button>
+          <Button onClick={handleComplete}>完了する</Button>
+          {isNotificationSent && <p>通知が送信されました！</p>}
         </Link>
       </div>
     </div>

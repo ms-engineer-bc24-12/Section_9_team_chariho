@@ -33,7 +33,7 @@ const containerStyle = {
   height: '100%',
 };
 
-const defaultCenter = { lat: 35.6895, lng: 139.6917 }; // 東京の緯度経度
+const defaultCenter = { lat: 34.6947584, lng: 135.528448 }; // 東京の緯度経度
 
 const GoogleMapComponent: React.FC<GoogleMapProps> = ({
   center = defaultCenter,

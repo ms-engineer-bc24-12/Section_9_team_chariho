@@ -1,9 +1,23 @@
 //src/app/mypage/history/page.tsx
 //③-① 利用履歴一覧ページ
+'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Button from '@/app/components/Button';
+import { listenForNotifications } from '@/lib/firebase';
 
 export default function HistoryPage() {
+  const [notification, setNotification] = useState<string | null>(null);
+
+  useEffect(() => {
+    // 通知を受け取る
+    listenForNotifications((payload) => {
+      // 受け取った通知内容をstateにセット
+      const message = payload.notification?.body;
+      setNotification(message || '通知がありません');
+    });
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-between min-h-[140vh] pt-16">
       <div className="flex flex-col items-center flex-grow max-w-lg">
@@ -14,10 +28,8 @@ export default function HistoryPage() {
           <p className="text-2xl font-semibold text-center">売上金：180円</p>
           <br />
           <div className="border p-4 rounded-md w-80">
-            <p>📅 2025/01/10</p>
-            <p>🚲 自転車:マウンテンバイク</p>
-            <p>📍 場所:春日部市</p>
-            <p>💰 料金:500円</p>
+            {/* 通知を表示 */}
+            <p>{notification}</p>
           </div>
         </div>
         <div className="mt-6">
@@ -29,6 +41,3 @@ export default function HistoryPage() {
     </div>
   );
 }
-
-//ページ確認
-//http://localhost:3000/mypage/history

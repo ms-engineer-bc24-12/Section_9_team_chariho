@@ -4,6 +4,12 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
+import {
+  getMessaging,
+  getToken,
+  onMessage,
+  MessagePayload,
+} from 'firebase/messaging';
 
 // Firebaseの設定
 const firebaseConfig = {
@@ -17,7 +23,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+// Firebase Authenticationの初期化
 export const auth = getAuth(app);
+
+// Firebase Messagingの初期化
+const messaging = getMessaging(app);
 
 // メールアドレスとパスワードでサインインする関数
 export async function signInWithEmail(email: string, password: string) {
@@ -60,3 +70,37 @@ export async function signUpWithEmail(email: string, password: string) {
     throw error; // エラーを呼び出し元に投げる
   }
 }
+
+// FCMトークンを取得する関数
+export async function getFCMToken() {
+  try {
+    // プッシュ通知の許可をリクエスト
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      // FCMトークンを取得
+      const token = await getToken(messaging, { vapidKey: 'YOUR_VAPID_KEY' });
+      if (token) {
+        console.log('FCM Token:', token);
+        return token;
+      } else {
+        console.error('FCMトークンの取得に失敗しました。');
+        return null;
+      }
+    } else {
+      console.error('通知の許可が得られませんでした。');
+      return null;
+    }
+  } catch (error) {
+    console.error('FCMトークンの取得中にエラーが発生しました。', error);
+    throw error;
+  }
+}
+
+// 通知受信のための設定
+export const listenForNotifications = (
+  callback: (payload: MessagePayload) => void,
+) => {
+  onMessage(messaging, (payload) => {
+    callback(payload);
+  });
+};
