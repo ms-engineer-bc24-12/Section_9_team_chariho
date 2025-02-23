@@ -77,8 +77,16 @@ export async function getFCMToken() {
     // プッシュ通知の許可をリクエスト
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
+      // VAPIDキーを環境変数から取得
+      const vapidKey = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
+
+      if (!vapidKey) {
+        console.error('VAPIDキーが設定されていません。');
+        return null;
+      }
+
       // FCMトークンを取得
-      const token = await getToken(messaging, { vapidKey: 'YOUR_VAPID_KEY' });
+      const token = await getToken(messaging, { vapidKey });
       if (token) {
         console.log('FCM Token:', token);
         return token;

@@ -1,11 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-import firebase_admin
-from firebase_admin import credentials, messaging
-
-# Firebase Admin SDKのセットアップ
-cred = credentials.Certificate("app/secrets/chariho-firebase-adminsdk-fbsvc-4ee2d1943e.json")
-firebase_admin.initialize_app(cred)
+from firebase_admin import messaging
+from app.utils.firebase import *
 
 router = APIRouter()
 
