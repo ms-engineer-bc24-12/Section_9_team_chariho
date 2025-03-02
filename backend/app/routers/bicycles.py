@@ -49,6 +49,20 @@ def create_bicycle(bike: BicycleCreate, db: Session = Depends(get_db)):
 
 
 # 自転車のデータを取得するエンドポイント
+@router.get("/bicycles/")
+def get_bicycles(db: Session = Depends(get_db)):
+    bikes = db.query(Bicycle).all()
+    return [
+        {
+            "id": bike.id,
+            "bikename": bike.bikename,
+            "image_url": bike.image_url,
+            "rental_price_per_hour": bike.rental_price_per_hour,
+        }
+        for bike in bikes
+    ]
+
+
 @router.get("/bicycles/{bicycle_id}")
 def get_bicycle(bicycle_id: int, db: Session = Depends(get_db)):
     bike = db.query(Bicycle).filter(Bicycle.id == bicycle_id).first()
