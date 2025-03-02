@@ -50,6 +50,7 @@ class Bicycle(Base):
     owner_id = Column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
+    bikename = Column(String(50), nullable=False)  # 自転車名を追加
     image_url = Column(Text)
 
     # 緯度・経度を DOUBLE PRECISION に統一
