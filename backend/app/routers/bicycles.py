@@ -82,3 +82,16 @@ def get_bicycle(bicycle_id: int, db: Session = Depends(get_db)):
         "created_at": bike.created_at,
         "updated_at": bike.updated_at,
     }
+
+
+# 自転車を削除するエンドポイント
+@router.delete("/bicycles/{bicycle_id}")
+def delete_bicycle(bicycle_id: int, db: Session = Depends(get_db)):
+    bike = db.query(Bicycle).filter(Bicycle.id == bicycle_id).first()
+    if not bike:
+        raise HTTPException(status_code=404, detail="自転車が見つかりません")
+
+    db.delete(bike)
+    db.commit()
+
+    return {"message": f"自転車ID {bicycle_id} を削除しました"}
