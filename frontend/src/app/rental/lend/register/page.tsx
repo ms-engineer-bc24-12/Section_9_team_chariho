@@ -172,29 +172,37 @@ export default function RegisterBikePage() {
                 <option value="鍵式">鍵式</option>
               </select>
             </label>
-
-            {/* 位置情報取得 */}
+            {/* 位置情報の取得 */}
             <label className="block mb-4">
               🚲 保管場所（現在地）位置情報
-              <div className="flex items-center gap-2">
-                <Button onClick={handleGetLocation}>登録</Button>
-                <Button onClick={handleRetryLocation}>再取得</Button>
+              <div className="flex flex-col gap-2">
+                {' '}
+                {/* flex-col で縦並びに */}
+                {/* コメント部分 */}
+                <p>
+                  ※正確な位置を登録するため、保管場所でボタンを押してください。
+                </p>
+                {/* ボタン部分 */}
+                <div className="flex justify-center gap-2">
+                  <Button onClick={handleGetLocation}>登録</Button>
+                  <Button onClick={handleRetryLocation}>再取得</Button>
+                </div>
+                {/* ステータスメッセージ */}
                 {locationStatus && (
-                  <span
-                    className={
+                  <p
+                    className={`text-center ${
                       locationStatus === 'OK'
                         ? 'text-green-500'
                         : 'text-red-500'
-                    }
+                    }`}
                   >
                     {locationStatus === 'OK'
                       ? 'OK (取得成功)'
                       : 'NG (取得失敗)'}
-                  </span>
+                  </p>
                 )}
               </div>
             </label>
-
             {/* 画像撮影（Base64 & ローカルストレージ保存対応） */}
             <CameraToBase64 onCapture={(base64) => setCapturedImage(base64)} />
 
