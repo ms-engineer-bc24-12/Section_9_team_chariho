@@ -28,7 +28,6 @@ export default function RegisterBikePage() {
   } | null>(null);
   const [locationStatus, setLocationStatus] = useState<'OK' | 'NG' | ''>('');
   const [isRegistered, setIsRegistered] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // 画像アップロード関連の状態管理
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
@@ -147,15 +146,13 @@ export default function RegisterBikePage() {
     console.error('エラー:', error);
 
     if (error instanceof TypeError) {
-      setErrorMessage(
-        'ネットワークエラーが発生しました。接続を確認してください。',
-      );
+      alert('ネットワークエラーが発生しました。接続を確認してください。');
     } else if (error instanceof SyntaxError) {
-      setErrorMessage('データの処理中にエラーが発生しました。');
+      alert('データの処理中にエラーが発生しました。');
     } else if (error instanceof Error) {
-      setErrorMessage(error.message || '登録に失敗しました');
+      alert(error.message || '登録に失敗しました');
     } else {
-      setErrorMessage('不明なエラーが発生しました');
+      alert('不明なエラーが発生しました');
     }
   };
 
@@ -180,9 +177,6 @@ export default function RegisterBikePage() {
           <div className="p-6 max-w-md w-full border rounded-md shadow-md bg-white">
             {/* エラーメッセージ表示 */}
             {error && <p className="text-red-500">【位置情報エラー】{error}</p>}
-            {errorMessage && (
-              <p className="text-red-500">【登録エラー】{errorMessage}</p>
-            )}
 
             {/* 自転車の名前入力 */}
             <label className="block mb-2">
@@ -286,15 +280,9 @@ export default function RegisterBikePage() {
 
             {/* 登録ボタン（画像がアップロードされていないと表示しない） */}
             {capturedImage && (
-              <>
-                {errorMessage && (
-                  <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-                )}
-
-                <div className="flex justify-center mt-4">
-                  <Button onClick={handleRegister}>登録</Button>
-                </div>
-              </>
+              <div className="flex justify-center mt-4">
+                <Button onClick={handleRegister}>登録</Button>
+              </div>
             )}
           </div>
         )}
