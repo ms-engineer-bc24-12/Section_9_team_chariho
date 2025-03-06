@@ -1,6 +1,7 @@
 from sqlalchemy import (
     Column,
     Integer,
+    BigInteger,
     String,
     DateTime,
     Text,
@@ -45,8 +46,7 @@ class User(Base):
 
 class Bicycle(Base):
     __tablename__ = "bicycles"
-
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(BigInteger, primary_key=True, index=True)  # BigInteger に変更
     owner_id = Column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
@@ -86,9 +86,9 @@ class Reservation(Base):
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     bicycle_id = Column(
-        Integer, ForeignKey("bicycles.id", ondelete="CASCADE"), nullable=False
-    )
-    hours = Column(Integer, nullable=False)
+        BigInteger, ForeignKey("bicycles.id", ondelete="CASCADE"), nullable=True
+    )  # ✅ `BigInteger` に変更
+    hours = Column(Integer, nullable=False)  # ここを `Integer` に変更
     amount = Column(DECIMAL(10, 2), nullable=False)  # 金額
     status = Column(
         String(50), default="pending", nullable=False
@@ -96,9 +96,15 @@ class Reservation(Base):
     checkout_session_id = Column(String, unique=True, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
 
-    # ユーザーと自転車のリレーション
+    # リレーションの修正（bicycle_id が NULL の場合にも対応）
     user = relationship("User", back_populates="reservations")
-    bicycle = relationship("Bicycle", back_populates="reservations")
+    bicycle = relationship(
+        "Bicycle",
+        back_populates="reservations",
+        foreign_keys=[bicycle_id],
+        lazy="joined",
+        uselist=False,
+    )
 
     # 制約
     __table_args__ = (

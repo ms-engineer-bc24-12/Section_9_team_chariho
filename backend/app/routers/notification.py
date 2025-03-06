@@ -12,6 +12,8 @@ class NotificationRequest(BaseModel):
 
 @router.post("/send-notification/")
 def send_notification(request: NotificationRequest):
+    print(f"Received FCM Token: {request.token}")  # ここでトークンを出力
+
     message = messaging.Message(
         notification=messaging.Notification(
             title=request.title,
@@ -19,5 +21,11 @@ def send_notification(request: NotificationRequest):
         ),
         token=request.token,
     )
-    response = messaging.send(message)
-    return {"message_id": response}
+
+    try:
+        response = messaging.send(message)
+        print(f"Notification sent successfully: {response}")  # 通知送信成功時のログ
+        return {"message_id": response}
+    except Exception as e:
+        print(f"Failed to send notification: {e}")  # エラー発生時のログ
+        return {"error": str(e)}

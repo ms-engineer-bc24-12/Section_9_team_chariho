@@ -10,5 +10,5 @@ if firebase_credentials_path is None:
 
 # Firebaseの初期化（すでに初期化済みでない場合のみ実行）
 if not firebase_admin._apps:
-    cred = credentials.Certificate(firebase_credentials_path)
+    cred = credentials.Certificate("app/secrets/chariho-firebase-adminsdk-fbsvc-4ee2d1943e.json")
     firebase_admin.initialize_app(cred)
