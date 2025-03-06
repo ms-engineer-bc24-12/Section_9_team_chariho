@@ -146,7 +146,7 @@ export default function BorrowPage() {
             </div>
           </div>
         )}
-
+        <br />
         {selectedBike && isSelected && (
           <div>
             <div className="p-4 max-w-lg w-md border rounded-lg shadow-md bg-white">

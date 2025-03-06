@@ -7,6 +7,7 @@ from app.routers import webhook  # webhook.py をインポート
 from app.routers import checkout  # checkout.py をインポート
 from app.routers import bicycles  # bicycles.py をインポート
 from app.routers import upload
+from app.routers import notification  # notification.pyをインポート
 from contextlib import asynccontextmanager
 from app.db import init_db
 from app.middleware import add_cors_middleware
@@ -20,6 +21,7 @@ app.include_router(webhook.router)
 app.include_router(checkout.router)
 app.include_router(bicycles.router)
 app.include_router(upload.router)
+app.include_router(notification.router)
 add_cors_middleware(app)
 
 # PostgreSQLへの接続設定

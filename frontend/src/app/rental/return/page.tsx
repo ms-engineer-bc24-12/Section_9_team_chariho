@@ -11,7 +11,7 @@ import CameraUploader from '@/app/components/CameraUploader';
 import Link from 'next/link';
 
 // 仮の現在地
-const storageLocation = { lat: 35.3959936, lng: 136.6228992 }; //返却可能
+const storageLocation = { lat: 34.6882048, lng: 135.5087872 }; //返却可能
 
 // 返却可能な誤差範囲（±10m ≒ 0.00009度）
 const LAT_LNG_THRESHOLD = 0.00009;
