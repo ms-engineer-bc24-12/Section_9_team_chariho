@@ -283,7 +283,7 @@ export default function RegisterBikePage() {
                 )}
               </div>
             </label>
-            
+
             {/* 画像撮影（Base64変換） */}
             <CameraToBase64 onCapture={(base64) => setCapturedImage(base64)} />
 

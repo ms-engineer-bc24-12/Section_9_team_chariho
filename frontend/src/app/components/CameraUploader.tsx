@@ -11,16 +11,24 @@ interface CameraUploaderProps {
   onPhotoSelect: (file: File) => void;
   onCancel?: () => void;
   description?: string; // 説明用のテキスト
+  initialImage?: File | null;
+  initialRegistered?: boolean;
+  initialConfirming?: boolean;
 }
 
 export default function CameraUploader({
   onPhotoSelect,
   onCancel,
   description = '返却場所で貸出自転車を撮影',
+  initialImage,
+  initialRegistered = false,
+  initialConfirming = false,
 }: CameraUploaderProps) {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [isConfirming, setIsConfirming] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false); // 登録完了後に画像を表示するための状態
+  const [selectedImage, setSelectedImage] = useState<File | null>(
+    initialImage ?? null,
+  );
+  const [isConfirming, setIsConfirming] = useState(initialConfirming ?? false);
+  const [isRegistered, setIsRegistered] = useState(initialRegistered ?? false); // 登録完了後に画像を表示するための状態
   const [showConfirmation, setShowConfirmation] = useState(false); // 画像アップロード成功時に表示
 
   // 修正: `showConfirmation` はアップロード完了後にのみ true にする
@@ -102,7 +110,10 @@ export default function CameraUploader({
   // 撮影した写真を登録後、画像を表示
   if (isRegistered && selectedImage) {
     return (
-      <div className="flex flex-col items-center mt-6">
+      <div
+        className="flex flex-col items-center mt-6"
+        data-testid="camera-to-base64"
+      >
         <p className="text-lg font-bold text-orange-600">{description}</p>
         <Image
           src={URL.createObjectURL(selectedImage)}

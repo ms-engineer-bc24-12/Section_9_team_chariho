@@ -26,7 +26,9 @@ export default function HistoryPage() {
         {/* 自転車を貸した場合 */}
         <div className="flex flex-col gap-2 mt-4 md-6">
           <p className="text-2xl font-semibold text-center">売上金：0円</p>
-          <p className="text-2xl font-semibold text-center">お支払金額：1000円</p>
+          <p className="text-2xl font-semibold text-center">
+            お支払金額：1000円
+          </p>
           <br />
           <div className="border p-4 rounded-md w-80">
             <p>📅 2025/02/27</p>
