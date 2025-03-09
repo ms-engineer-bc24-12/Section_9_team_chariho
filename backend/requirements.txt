@@ -62,3 +62,5 @@ psycopg2
 stripe
 celery
 python-multipart
+pytest
+httpx

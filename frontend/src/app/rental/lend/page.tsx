@@ -85,6 +85,7 @@ export default function LendPage() {
             {bikes.map((bike) => (
               <div
                 key={bike.id}
+                data-testid="bike-item" // data-testidを追加
                 className="flex flex-col items-center border p-6 rounded-lg shadow-md bg-white"
               >
                 {/* 画像表示 */}
