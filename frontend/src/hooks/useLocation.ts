@@ -1,7 +1,7 @@
 //src/hooks/useLocation.ts
 //現在地取得
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export function useLocation() {
   const [userLocation, setUserLocation] = useState<{
@@ -58,11 +58,6 @@ export function useLocation() {
       },
     );
   };
-
-  // 📌 初回の位置情報取得
-  useEffect(() => {
-    getLocation();
-  }, []);
 
   return { userLocation, error, getLocation };
 }
